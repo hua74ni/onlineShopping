@@ -1,10 +1,8 @@
 package com.biz.platform.web.service;
 
 import com.biz.platform.web.pojo.Goods;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
-
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by huangdonghua on 2017/12/14.
@@ -19,17 +17,21 @@ public interface GoodsService {
 
     /**
      * 新增goods
+     *
+     * @param goodsImage
      * @param goods
      * @return
      */
-    public int addGoods(Goods goods);
+    public int addGoods(MultipartFile goodsImage, Goods goods);
 
     /**
      * 修改goods
+     *
+     * @param goodsImage
      * @param goods
      * @return
      */
-    public int updateGoods(Goods goods);
+    public int updateGoods(MultipartFile goodsImage, Goods goods);
 
     /**
      * 删除goods

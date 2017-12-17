@@ -6,6 +6,7 @@ import com.biz.platform.web.service.BaseService;
 import com.biz.platform.web.service.ShopService;
 import com.biz.platform.web.utils.PropertiesUtil;
 import com.biz.platform.web.utils.StringUtils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +42,17 @@ public class ShopServiceImpl extends BaseService<Shop> implements ShopService {
             return 0;
         }
 
+        //获取shop图片保存路径
         String originalFilename = shopImage.getOriginalFilename();
         String shopImagePath = PropertiesUtil.getString("shop.image.path");
-        String fileName = new Date() + "" +originalFilename;
+        //文件名： long时间+"-"+源文件名
+        String fileName = (new Date()).getTime()/1000 + "-" +originalFilename;
 
+        //将上传的图片保存到指定路径
         File image = new File(shopImagePath,fileName);
-
         try {
             shopImage.transferTo(image);
+            shop.setShopLogoPath(fileName);
         } catch (IOException e) {
             logger.error("商家上传图片失败");
             logger.error(e.toString());
@@ -56,16 +60,37 @@ public class ShopServiceImpl extends BaseService<Shop> implements ShopService {
             throw new RuntimeException();
         }
 
-        shop.setShopLogoPath(fileName);
         shop.setCreateTime(new Date());
         return shopMapper.insertSelective(shop);
     }
 
     @Override
-    public int updateShop(Shop shop) {
+    public int updateShop(MultipartFile shopImage, Shop shop) {
         if(shop == null || StringUtils.isNullOrBlank(shop.getShopId())){
             return 0;
         }
+
+        //如果图片为空就不上传 不替代之前的图片
+        //如果不为空 替代之前的图片 并且删除之前的图片
+        if(shopImage != null && !shopImage.isEmpty()){
+            String originalFilename = shopImage.getOriginalFilename();
+            String shopImagePath = PropertiesUtil.getString("shop.image.path");
+            String fileName = (new Date()).getTime()/1000 + "-" +originalFilename;
+            File image = new File(shopImagePath,fileName);
+            try {
+                shopImage.transferTo(image);
+                shop.setShopLogoPath(fileName);
+                //获取修改之前的shop信息
+                Shop tmpShop = this.getShopByShopId(shop);
+                //删除之前的图片
+                deleteOldImage(tmpShop.getShopLogoPath());
+            } catch (IOException e) {
+                logger.error("商家上传图片失败");
+                logger.error(e.toString());
+                throw new RuntimeException();
+            }
+        }
+
         return shopMapper.updateByPrimaryKeySelective(shop);
     }
 
@@ -74,6 +99,32 @@ public class ShopServiceImpl extends BaseService<Shop> implements ShopService {
         if(shop == null || StringUtils.isNullOrBlank(shop.getShopId())){
             return 0;
         }
-        return shopMapper.deleteByPrimaryKey(shop);
+
+        shop = this.getShopByShopId(shop);
+
+        //删除数据成功后 删除图片
+        int result = shopMapper.deleteByPrimaryKey(shop);
+        if(result != 0){
+            deleteOldImage(shop.getShopLogoPath());
+        }
+
+        return result;
     }
+
+    //删除旧的图片
+    private void deleteOldImage(String shopLogoPath){
+
+        String shopImagePath = PropertiesUtil.getString("shop.image.path");
+        String filePath = shopImagePath + "/" + shopLogoPath;
+        File file = new File(filePath);
+
+        try {
+            FileUtils.forceDelete(file);
+        } catch (IOException e) {
+            logger.error("图片删除失败");
+            e.printStackTrace();
+        }
+
+    }
+
 }

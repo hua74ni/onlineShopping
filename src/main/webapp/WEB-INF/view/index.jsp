@@ -16,7 +16,7 @@
     //登录
     function login() {
         var myurl = "${pageContext.request.contextPath}/login.do";
-        var myjson = {"userCode":"test222","userPassword":"123"};
+        var myjson = {"userCode":"test123","userPassword":"123"};
         $.ajax({
             type: "POST",
             url: myurl,
@@ -45,6 +45,54 @@
         });
     }
 
+    function shopSubmit(){
+
+        var form = $("#form1");
+        form.submit();
+
+    }
+
+    function deleteShop(){
+
+        var myurl = "${pageContext.request.contextPath}/shop/deleteShop.do";
+        var myjson = {"shopId":"f93b4535168b419899c36809da6da256"};
+        $.ajax({
+            type: "POST",
+            url: myurl,
+            dataType: "json",
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify(myjson),
+            success: function(data) {
+                console.log(data);
+            }
+        });
+
+    }
+
+    function goodsSubmit(){
+
+        var form = $("#form2");
+        form.submit();
+
+    }
+
+    function deleteGoods(){
+
+        var myurl = "${pageContext.request.contextPath}/goods/deleteGoods.do";
+        var myjson = {"goodsId":"4cf2305f317044fcbb4833f8ef5dcee9"};
+        $.ajax({
+            type: "POST",
+            url: myurl,
+            dataType: "json",
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify(myjson),
+            success: function(data) {
+                console.log(data);
+            }
+        });
+
+    }
+
 </script>
 <body>
 
@@ -57,6 +105,41 @@
     <button onclick="getUserByUserId();">
         测试
     </button>
+
+    <form id="form1" method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/shop/addShop.do" >
+        商家图片上传<input type="file" id="shopImage" name="shopImage" /><br/>
+        商家名称<input type="text" id="shopName" name="shopName" value="test123" />
+    </form><br/>
+
+    <form id="form2" method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/goods/addGoods.do" >
+        商品图片上传<input type="file" id="goodsImage" name="goodsImage" /><br/>
+        商品名称<input type="text" id="goodsName" name="goodsName" value="goodsName123" />
+        商家编码<input type="text" id="goodsShopId" name="goodsShopId" value="test123" />
+        商品类型<input type="text" id="goodsType" name="goodsType" value="char" />
+        商品价格<input type="text" id="goodsPrice" name="goodsPrice" value="32.00" />
+    </form><br/>
+
+    <p>商家图片</p>
+    <img src="${pageContext.request.contextPath}/shop/loadImage.do?type=shop&shopLogoPath=1513499222-avatar.jpg" height="200" width="200">
+
+    <p>商品图片</p>
+    <img src="${pageContext.request.contextPath}/shop/loadImage.do?type=goods&shopLogoPath=1513500279-favicon.ico" height="200" width="200">
+
+    <button onclick="shopSubmit();">
+        商家注册
+    </button>
+
+    <button onclick="deleteShop();">
+        删除商家
+    </button><br/><br/>
+
+    <button onclick="goodsSubmit();">
+        商家上传商品
+    </button>
+
+    <button onclick="deleteGoods();">
+        删除商品
+    </button><br/><br/>
 
 </body>
 </html>

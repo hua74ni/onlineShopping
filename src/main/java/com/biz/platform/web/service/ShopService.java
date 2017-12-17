@@ -25,10 +25,12 @@ public interface ShopService {
 
     /**
      * 修改shop信息
+     *
+     * @param shopImage
      * @param shop
      * @return
      */
-    public int updateShop(Shop shop);
+    public int updateShop(MultipartFile shopImage, Shop shop);
 
     /**
      * 删除shop
