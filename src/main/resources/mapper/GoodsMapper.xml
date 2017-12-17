@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz.platform.web.mapper.GoodsMapper">
+
+    <resultMap type="com.biz.platform.web.pojo.Goods" id="goodsResultMap">
+        <result column="goods_id" property="goodsId"/>
+        <result column="goods_shop_id" property="goodsShopId"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="goods_type" property="goodsType"/>
+        <result column="goods_activity" property="goodsActivity"/>
+        <result column="goods_price" property="goodsPrice"/>
+        <result column="goods_logo_path" property="goodsLogoPath"/>
+        <result column="goods_detais" property="goodsDetails"/>
+        <result column="goods_remarks" property="goodsRemarks"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_modify_time" property="lastModifyTime"/>
+    </resultMap>
+
+    <sql id="sys_goods_result">
+        goods_id,goods_shop_id,goods_name,goods_type,goods_activity,goods_price,goods_logo_path,goods_detais,
+        goods_remarks,create_time,last_modify_time
+    </sql>
+
+    <select id="getGoodsByUserId" parameterType="java.lang.String" resultMap="goodsResultMap">
+
+        select
+        <include refid="sys_goods_result"></include>
+        from biz_platform_goods
+        where goods_shop_id in (
+            select shop_id from biz_platform_shop
+            where shop_user_id = #{userId}
+        )
+
+    </select>
+
+
+</mapper>

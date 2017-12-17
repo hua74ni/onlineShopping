@@ -1,0 +1,36 @@
+package com.biz.platform.web.service;
+
+import com.biz.platform.web.pojo.FeedBack;
+
+/**
+ * Created by huangdonghua on 2017/12/14.
+ */
+public interface FeedBackService {
+    /**
+     * 通过FeedBackId获得 FeedBack
+     * @param feedBack
+     * @return
+     */
+    public FeedBack getFeedBackByFeedBackId(FeedBack feedBack);
+
+    /**
+     * 新增 feedBack
+     * @param feedBack
+     * @return
+     */
+    public int addFeedBack(FeedBack feedBack);
+
+    /**
+     * 修改feedBack
+     * @param feedBack
+     * @return
+     */
+    public int updateFeedBack(FeedBack feedBack);
+
+    /**
+     * 删除feedBack
+     * @param feedBack
+     * @return
+     */
+    public int deleteFeedBack(FeedBack feedBack);
+}

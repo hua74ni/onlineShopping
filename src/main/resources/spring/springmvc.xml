@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+	    http://www.springframework.org/schema/tx
+	    http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    	http://www.springframework.org/schema/aop
+     	http://www.springframework.org/schema/aop/spring-aop-4.3.xsd"
+       default-lazy-init="false">
+    <!-- 注解的Handler -->
+    <!-- <bean  class="it.itcast.ssm.controller.ItemsController3"/> -->
+    <!-- 可以通过context:component-scan 扫描包所有的Handler -->
+    <context:component-scan base-package="com.biz.platform.web.controller" />
+
+    <!-- 开启自定义conversion-service -->
+    <!--<mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>-->
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!-- /** -> 该包下的路径和子路径 -->
+    <mvc:resources mapping="/css/**" location="/resouces/css/" />
+    <mvc:resources mapping="/js/**" location="/resouces/js/" />
+    <mvc:resources mapping="/images/**" location="/resouces/image/" />
+    <!--<mvc:resources mapping="/*.html" location="/webapp/" />-->
+
+    <!--
+        @requestBody    spring支持 自动将json格式转换为java
+        @responesBody   spring支持 自动将java转换为json格式
+        需要导入jackson-core-asl-1.9.11.jar 和   jackson-mapper-asl-1.9.11.jar
+        由于以上配置方式无需配置
+     -->
+
+    <!-- spring 使用 Jackson配置-->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="mappingJacksonHttpMessageConverter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="mappingJacksonHttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name = "supportedMediaTypes">
+            <list>
+                <bean class="org.springframework.http.MediaType">
+                    <constructor-arg index="0" value="text"/>
+                    <constructor-arg index="1" value="plain"/>
+                    <constructor-arg index="2" value="UTF-8"/>
+                </bean>
+                <bean class="org.springframework.http.MediaType">
+                    <constructor-arg index="0" value="*"/>
+                    <constructor-arg index="1" value="*"/>
+                    <constructor-arg index="2" value="UTF-8"/>
+                </bean>
+                <bean class="org.springframework.http.MediaType">
+                    <constructor-arg index="0" value="text"/>
+                    <constructor-arg index="1" value="*"/>
+                    <constructor-arg index="2" value="UTF-8"/>
+                </bean>
+                <bean class="org.springframework.http.MediaType">
+                    <constructor-arg index="0" value="application"/>
+                    <constructor-arg index="1" value="json"/>
+                    <constructor-arg index="2" value="UTF-8"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 视图解析器 解析jsp视图，默认使用jstl标签，classpath下得有jstl包 -->
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="WEB-INF/view/"></property>
+        <property name="suffix" value=".jsp"></property>
+        <!--			可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑-->
+        <property name="viewClass">
+            <value>org.springframework.web.servlet.view.InternalResourceView
+            </value>
+        </property>
+    </bean>
+    <!-- 处理器适配器转换器 -->
+    <!--<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">-->
+        <!--<property name="converters">-->
+            <!--&lt;!&ndash; 日期类型转换 &ndash;&gt;-->
+            <!--<bean class="com.shixun.controller.converter.CustomDateConverter"/>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!-- 为解决以POST的方式提交表单数据接受不到的问题：
+        需要添加commons-fileupload 和 commons-io -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置文件上传的最大尺寸为5MB 需要在表单上enctype="multipar/form-data"
+            在eclipse中的tomcat配置modules->add External web modules->Path:/pic;Document Base:本地路径地址
+            还有另一种方式就是在本地的tomcat中的conf/server.xml文件中配置：
+            <Context docBase="/Users/huangdonghua/Documents/project_test/upload" path="/pic" reloadable="false" />
+         -->
+        <property name="maxUploadSize">
+            <value>5242880</value>
+        </property>
+    </bean>
+
+    <mvc:interceptors>
+        <!-- 多个拦截器，按顺序执行 -->
+        <!-- 拦截器1 拦截器2 执行顺序
+            preHandler1     preHandler2
+            postHandler2    postHandler1
+            afterHandler2   afterHandler1
+            preHandler通过 一定会执行 afterHandler 但不一定会执行 postHandler 除非preHandler都通过
+        -->
+        <!--
+            统一日志处理的拦截器放第一个
+            然后是登陆校验->权限校验在其之后
+         -->
+        <!-- 登陆拦截器 -->
+        <mvc:interceptor>
+            <!-- /**表示所有url包括子路径 -->
+            <mvc:mapping path="/**"/>
+            <bean class="com.biz.platform.web.interceptor.LoginInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+</beans>

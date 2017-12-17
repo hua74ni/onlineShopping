@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz.platform.web.mapper.FeedBackMapper">
+
+    <resultMap type="com.biz.platform.web.pojo.FeedBack" id="feedBackResultMap">
+        <result column="feedback_id" property="feedBackId"/>
+        <result column="order_id" property="orederId"/>
+        <result column="goods_id" property="goodsId"/>
+        <result column="buyer_id" property="buyerId"/>
+        <result column="buyer_name" property="buyerName"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="feedback_msg" property="feedbackMsg"/>
+        <result column="shop_revert" property="shopRevert"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_modify_time" property="lastModifyTime"/>
+    </resultMap>
+
+    <sql id="sys_feedBack_result">
+        feedback_id,order_id,goods_id,buyer_id,buyer_name,shop_id,feedback_msg,shop_revert,create_time,last_modify_time
+    </sql>
+
+
+
+
+</mapper>
