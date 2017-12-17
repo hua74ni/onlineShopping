@@ -5,6 +5,7 @@ import com.biz.platform.web.pojo.Order;
 import com.biz.platform.web.pojo.User;
 import com.biz.platform.web.service.BaseService;
 import com.biz.platform.web.service.OrderService;
+import com.biz.platform.web.utils.CollectionUtils;
 import com.biz.platform.web.utils.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -73,5 +74,25 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
         List<Order> orders = orderMapper.selectByExample(example);
 
         return new PageInfo<Order>(orders);
+    }
+
+    @Override
+    public int batchAddOder(List<Order> orders) {
+
+        if(CollectionUtils.isEmpty(orders)){
+            return 0;
+        }
+
+        try{
+            for (Order order:
+                    orders) {
+                order.setCreateTime(new Date());
+                orderMapper.insertSelective(order);
+            }
+        }catch (Exception e){
+            return 0;
+        }
+
+        return 1;
     }
 }

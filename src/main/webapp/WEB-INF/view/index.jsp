@@ -16,7 +16,7 @@
     //登录
     function login() {
         var myurl = "${pageContext.request.contextPath}/login.do";
-        var myjson = {"userCode":"test123","userPassword":"123"};
+        var myjson = {"userCode":"test222","userPassword":"123"};
         $.ajax({
             type: "POST",
             url: myurl,
@@ -108,6 +108,57 @@
         });
     }
 
+    function addTempOrder(){
+
+        var myurl = "${pageContext.request.contextPath}/order/addTempOrder.do";
+        var myjson = {"goodsId":"goods123","goodsNum":1,"goodsPrice":12.12,"orderTotalPrice":12.12};
+        $.ajax({
+            type: "POST",
+            url: myurl,
+            dataType: "json",
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify(myjson),
+            success: function(data) {
+                console.log(data);
+            }
+        });
+
+    }
+
+    function getTempOrder(){
+
+        var myurl = "${pageContext.request.contextPath}/order/getTempOrder.do";
+        $.ajax({
+            type: "POST",
+            url: myurl,
+            dataType: "json",
+            contentType: 'application/json; charset=UTF-8',
+//            data: JSON.stringify(myjson),
+            success: function(data) {
+                console.log(data);
+            }
+        });
+
+    }
+
+    function batchAddOder(){
+
+        var myurl = "${pageContext.request.contextPath}/order/batchAddOder.do";
+        var myjson = [{"goodsId":"goods123","goodsNum":1,"goodsPrice":12.12,"orderTotalPrice":12.12,"deliveryStartAddr":"开始地址","deliveryEndAddr":"结束地址","orderBuyerId":"test222","orderBuyerName":"测试买家","orderShopId":"shop222","orderShopName":"测试商家"},{"goodsId":"goods123","goodsNum":1,"goodsPrice":12.12,"orderTotalPrice":12.12,"deliveryStartAddr":"开始地址","deliveryEndAddr":"结束地址","orderBuyerId":"test222","orderBuyerName":"测试买家","orderShopId":"shop222","orderShopName":"测试商家"}];
+
+        $.ajax({
+            type: "POST",
+            url: myurl,
+            dataType: "json",
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify(myjson),
+            success: function(data) {
+                console.log(data);
+            }
+        });
+
+    }
+
 </script>
 <body>
 
@@ -158,7 +209,19 @@
 
     <button onclick="checkUserCode();">
         测试userCode是否已经存在
-    </button><br/>
+    </button><br/><br/>
+
+    <button onclick="addTempOrder();">
+        添加临时订单
+    </button>
+
+    <button onclick="getTempOrder();">
+        展示临时订单
+    </button><br/><br/>
+
+    <button onclick="batchAddOder();">
+        批量添加订单
+    </button><br/><br/>
 
 </body>
 </html>

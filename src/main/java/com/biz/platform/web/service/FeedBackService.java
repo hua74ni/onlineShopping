@@ -33,4 +33,12 @@ public interface FeedBackService {
      * @return
      */
     public int deleteFeedBack(FeedBack feedBack);
+
+    /**
+     * 判断当前用户是否可评论 该物品
+     * @param goodsId
+     * @param userId
+     * @return
+     */
+    public int checkUserIsFeedBack(String goodsId, String userId);
 }

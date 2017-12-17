@@ -49,4 +49,10 @@ public interface OrderService {
      */
     public PageInfo<Order> getOrderByUserId(int pageNum, int pageSize, User loginUser);
 
+    /**
+     * 批量添加订单
+     * @param orders
+     * @return
+     */
+    public int batchAddOder(List<Order> orders);
 }

@@ -63,6 +63,16 @@ public class LoginController {
     }
 
 
+    //登录
+    @RequestMapping("/getCurrentLoginUser.do")
+    @ResponseBody
+    public User getCurrentLoginUser(HttpServletRequest request){
+
+        User user = (User) request.getSession().getAttribute("loginUser");
+
+        return user;
+    }
+
     /**
      * 前端验证码
      *
