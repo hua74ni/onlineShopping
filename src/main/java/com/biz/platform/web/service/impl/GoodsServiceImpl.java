@@ -52,6 +52,11 @@ public class GoodsServiceImpl extends BaseService<Goods> implements GoodsService
         //文件名： long时间+"-"+源文件名
         String fileName = (new Date()).getTime()/1000 + "-" +originalFilename;
 
+        File folder = new File(goodsImagePath);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
         //将上传的图片保存到指定路径
         File image = new File(goodsImagePath,fileName);
         try {
