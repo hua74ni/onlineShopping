@@ -116,6 +116,11 @@ public class ShopServiceImpl extends BaseService<Shop> implements ShopService {
         return result;
     }
 
+    @Override
+    public int checkShopName(String shopName) {
+        return shopMapper.checkShopName(shopName);
+    }
+
     //删除旧的图片
     private void deleteOldImage(String shopLogoPath){
 

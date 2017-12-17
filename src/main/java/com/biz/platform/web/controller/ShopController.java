@@ -1,5 +1,6 @@
 package com.biz.platform.web.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.biz.platform.web.pojo.Shop;
 import com.biz.platform.web.pojo.User;
 import com.biz.platform.web.service.ShopService;
@@ -83,6 +84,13 @@ public class ShopController {
     public AjaxResult deleteShop(@RequestBody Shop shop){
         int result = shopService.deleteShop(shop);
         return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
+    }
+
+    @RequestMapping("/checkShopName.do")
+    @ResponseBody
+    public int checkShopName(@RequestBody JSONObject jsonObject){
+        String shopName = jsonObject.getString("shopName");
+        return shopService.checkShopName(shopName);
     }
 
     @RequestMapping("/loadImage.do")

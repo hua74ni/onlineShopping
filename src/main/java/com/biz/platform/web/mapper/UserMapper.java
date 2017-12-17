@@ -8,6 +8,5 @@ import tk.mybatis.mapper.common.Mapper;
  */
 public interface UserMapper extends Mapper<User>{
 
-
-
+    public int checkUserCode(String userCode);
 }

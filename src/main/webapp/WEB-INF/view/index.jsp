@@ -93,6 +93,21 @@
 
     }
 
+    function checkUserCode(){
+        var myurl = "${pageContext.request.contextPath}/user/checkUserCode.do";
+        var myjson = {"userCode":"test123"};
+        $.ajax({
+            type: "POST",
+            url: myurl,
+            dataType: "json",
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify(myjson),
+            success: function(data) {
+                console.log(data);
+            }
+        });
+    }
+
 </script>
 <body>
 
@@ -140,6 +155,10 @@
     <button onclick="deleteGoods();">
         删除商品
     </button><br/><br/>
+
+    <button onclick="checkUserCode();">
+        测试userCode是否已经存在
+    </button><br/>
 
 </body>
 </html>

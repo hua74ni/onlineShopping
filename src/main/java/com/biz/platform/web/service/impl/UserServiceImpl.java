@@ -78,4 +78,9 @@ public class UserServiceImpl extends BaseService<User> implements UserService{
         return userMapper.deleteByPrimaryKey(user.getUserId());
     }
 
+    @Override
+    public int checkUserCode(String userCode) {
+        return userMapper.checkUserCode(userCode);
+    }
+
 }

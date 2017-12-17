@@ -19,7 +19,9 @@
         user_id,user_code,user_password,user_name,user_type,user_phone,user_email,user_addr,create_time,last_modify_time
     </sql>
 
-
+    <select id="checkUserCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from biz_platform_user where user_code = #{userCode};
+    </select>
 
 
 </mapper>

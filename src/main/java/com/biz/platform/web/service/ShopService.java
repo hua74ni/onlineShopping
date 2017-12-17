@@ -38,4 +38,11 @@ public interface ShopService {
      * @return
      */
     public int deleteShop(Shop shop);
+
+    /**
+     * 校验shopName 是否已经存在
+     * @param shopName
+     * @return
+     */
+    public int checkShopName(String shopName);
 }

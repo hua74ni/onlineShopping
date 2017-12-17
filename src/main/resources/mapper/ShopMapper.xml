@@ -18,6 +18,10 @@
     </sql>
 
 
+    <select id="checkShopName" parameterType="java.lang.String" resultType="java.lang.Integer">
 
+        select count(*) from biz_platform_shop where shop_name = #{shopName};
+
+    </select>
 
 </mapper>

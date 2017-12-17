@@ -35,6 +35,17 @@ public interface UserService {
      */
     public int updateUser(User user);
 
-    //
+    /**
+     * 删除用户
+     * @param user
+     * @return
+     */
     public int deleteUser(User user);
+
+    /**
+     * 校验userCode是否已经存在
+     * @param userCode
+     * @return
+     */
+    public int checkUserCode(String userCode);
 }
