@@ -33,5 +33,16 @@
 
     </select>
 
+    <select id="queryGoodsHomePage" parameterType="com.biz.platform.web.vo.GoodsVo" resultMap="goodsResultMap">
+
+        select
+        <include refid="sys_goods_result"></include>
+        from biz_platform_goods
+        where goods_type = ${goodsVo.goodsType} and
+        goods_name LIKE '%${goodsVo.goodsName}%' ORDER BY create_time DESC;
+
+
+    </select>
+
 
 </mapper>

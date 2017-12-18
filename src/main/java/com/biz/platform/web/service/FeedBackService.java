@@ -40,5 +40,12 @@ public interface FeedBackService {
      * @param userId
      * @return
      */
-    public int checkUserIsFeedBack(String goodsId, String userId);
+    public String checkUserIsFeedBack(String goodsId, String userId);
+
+    /**
+     * 商家回复买家评论
+     * @param feedBack
+     * @return
+     */
+    public int revertFeedBack(FeedBack feedBack);
 }

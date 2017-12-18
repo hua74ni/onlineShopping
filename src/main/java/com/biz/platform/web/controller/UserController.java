@@ -1,6 +1,7 @@
 package com.biz.platform.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.biz.platform.web.pojo.Order;
 import com.biz.platform.web.pojo.User;
 import com.biz.platform.web.service.UserService;
 import com.biz.platform.web.utils.AjaxResult;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by huangdonghua on 2017/12/13.

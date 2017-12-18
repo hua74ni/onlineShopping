@@ -8,6 +8,7 @@ import com.biz.platform.web.pojo.User;
 import com.biz.platform.web.service.GoodsService;
 import com.biz.platform.web.utils.AjaxResult;
 import com.biz.platform.web.utils.PropertiesUtil;
+import com.biz.platform.web.vo.GoodsVo;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.io.FileUtils;
@@ -77,6 +78,17 @@ public class GoodsController {
     public AjaxResult deleteGoods(@RequestBody Goods goods){
         int result = goodsService.deleteGoods(goods);
         return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
+    }
+
+
+    //首页遍历商品 可选择类型 搜索 分页
+    @RequestMapping("/queryGoodsHomePage.do")
+    @ResponseBody
+    public PageInfo<Goods> queryGoodsHomePage(@RequestBody GoodsVo goodsVo){
+
+        PageInfo<Goods> goodsPage = goodsService.queryGoodsHomePage(goodsVo);
+
+        return goodsPage;
     }
 
     @RequestMapping("/getGoodsByUserId.do")

@@ -7,6 +7,7 @@ import com.biz.platform.web.service.BaseService;
 import com.biz.platform.web.service.GoodsService;
 import com.biz.platform.web.utils.PropertiesUtil;
 import com.biz.platform.web.utils.StringUtils;
+import com.biz.platform.web.vo.GoodsVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.io.FileUtils;
@@ -125,6 +126,21 @@ public class GoodsServiceImpl extends BaseService<Goods> implements GoodsService
         PageHelper.startPage(pageNum,pageSize);
         List<Goods> goods = goodsMapper.getGoodsByUserId(userId);
         return new PageInfo<Goods>();
+    }
+
+    @Override
+    public PageInfo<Goods> queryGoodsHomePage(GoodsVo goodsVo) {
+        int pageNum = 0;
+        int pageSize = 10;
+        if(goodsVo != null && goodsVo.getPageSize() != 0){
+            pageNum = goodsVo.getPageNum();
+            pageSize = goodsVo.getPageSize();
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        List<Goods> goods = goodsMapper.queryGoodsHomePage(goodsVo);
+
+
+        return null;
     }
 
     //删除旧的图片

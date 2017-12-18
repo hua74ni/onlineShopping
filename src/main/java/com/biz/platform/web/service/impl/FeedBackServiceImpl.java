@@ -8,6 +8,8 @@ import com.biz.platform.web.service.BaseService;
 import com.biz.platform.web.service.FeedBackService;
 import com.biz.platform.web.utils.CollectionUtils;
 import com.biz.platform.web.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -21,6 +23,8 @@ import java.util.List;
 @Service(value = "feedBackService")
 public class FeedBackServiceImpl extends BaseService<FeedBack> implements FeedBackService {
 
+    private Logger logger = LoggerFactory.getLogger(FeedBackServiceImpl.class);
+
     @Autowired
     private FeedBackMapper feedBackMapper;
 
@@ -29,6 +33,7 @@ public class FeedBackServiceImpl extends BaseService<FeedBack> implements FeedBa
 
     @Override
     public FeedBack getFeedBackByFeedBackId(FeedBack feedBack) {
+        //feedBack不能为空 feedBackId和feedBackMsg不能为空也不能为空值
         if(feedBack == null || StringUtils.isNullOrBlank(feedBack.getFeedBackId())){
             return null;
         }
@@ -37,10 +42,23 @@ public class FeedBackServiceImpl extends BaseService<FeedBack> implements FeedBa
 
     @Override
     public int addFeedBack(FeedBack feedBack) {
-        if(feedBack == null){
+        if(feedBack == null || StringUtils.isNotNullAndBlank(feedBack.getOrederId()) || StringUtils.isNotNullAndBlank(feedBack.getFeedbackMsg()) ){
             return 0;
         }
+
+        String orderId = feedBack.getOrederId();
+        Order order = orderMapper.selectByPrimaryKey(orderId);
+
+        //买家和当前登录用户编码不一样不可评论
+        if(!order.getOrderBuyerId().equals(feedBack.getBuyerId())){
+            logger.error("买家编码和当前登录用户编码不一样不可评论");
+            return 0;
+        }
+
+        feedBack.setGoodsId(order.getGoodsId());
+        feedBack.setShopId(order.getOrderShopId());
         feedBack.setCreateTime(new Date());
+
         return feedBackMapper.insertSelective(feedBack);
     }
 
@@ -61,9 +79,9 @@ public class FeedBackServiceImpl extends BaseService<FeedBack> implements FeedBa
     }
 
     @Override
-    public int checkUserIsFeedBack(String goodsId, String userId) {
+    public String checkUserIsFeedBack(String goodsId, String userId) {
 
-        int result = 1;
+        String result = "";
 
         Example example = new Example(Order.class);
         example.createCriteria()
@@ -83,16 +101,36 @@ public class FeedBackServiceImpl extends BaseService<FeedBack> implements FeedBa
         for (Order order:
         orders) {
             feedBackExample = new Example(FeedBack.class);
-            feedBackExample.createCriteria().andEqualTo("orederId",order.getOrderId());
+            feedBackExample.createCriteria().andEqualTo("orderId",order.getOrderId());
             int feedBackCount = feedBackMapper.selectCountByExample(feedBackExample);
 
             if(feedBackCount == 0) {
-                result = feedBackCount;
+                result = order.getOrderId();
                 break;
             }
         }
 
         return result;
+    }
+
+    @Override
+    public int revertFeedBack(FeedBack feedBack) {
+
+        if(feedBack == null || StringUtils.isNotNullAndBlank(feedBack.getFeedBackId()) || StringUtils.isNotNullAndBlank(feedBack.getShopRevert()) ){
+            return 0;
+        }
+
+        //当前登录用户的userId
+        String userId = feedBack.getShopId();
+
+        feedBack = feedBackMapper.selectByPrimaryKey(feedBack.getFeedBackId());
+
+        if(!feedBack.getShopId().equals(userId)){
+            logger.error("商家编码和当前登录用户编码不一样不可回复");
+            return 0;
+        }
+
+        return feedBackMapper.insertSelective(feedBack);
     }
 
 }

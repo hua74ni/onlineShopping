@@ -1,6 +1,7 @@
 package com.biz.platform.web.service;
 
 import com.biz.platform.web.pojo.Goods;
+import com.biz.platform.web.vo.GoodsVo;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +42,7 @@ public interface GoodsService {
     public int deleteGoods(Goods goods);
 
     /**
-     * 通过商家userId获取对应商家的订单 进行分页
+     * 通过商家userId获取对应商家的商品 进行分页
      *
      * @param pageNum
      * @param pageSize
@@ -49,4 +50,11 @@ public interface GoodsService {
      * @return
      */
     public PageInfo<Goods> getGoodsByUserId(int pageNum, int pageSize, String userId);
+
+    /**
+     * 首页遍历商品 可选择类型 搜索 分页
+     * @param goodsVo
+     * @return
+     */
+    public PageInfo<Goods> queryGoodsHomePage(GoodsVo goodsVo);
 }

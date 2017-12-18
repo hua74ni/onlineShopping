@@ -1,13 +1,14 @@
 package com.biz.platform.web.service.impl;
 
 import com.biz.platform.web.mapper.OrderMapper;
+import com.biz.platform.web.pojo.ConfirmOrder;
 import com.biz.platform.web.pojo.Order;
+import com.biz.platform.web.pojo.Shop;
 import com.biz.platform.web.pojo.User;
 import com.biz.platform.web.service.BaseService;
 import com.biz.platform.web.service.OrderService;
 import com.biz.platform.web.utils.CollectionUtils;
 import com.biz.platform.web.utils.StringUtils;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.aspectj.weaver.ast.Or;
@@ -76,8 +77,12 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
         return new PageInfo<Order>(orders);
     }
 
+    //未完善 依据实际修改
     @Override
-    public int batchAddOder(List<Order> orders) {
+    public int batchAddOder(ConfirmOrder confirmOrder) {
+
+        List<Order> orders = confirmOrder.getOrders();
+        User user = confirmOrder.getUser();
 
         if(CollectionUtils.isEmpty(orders)){
             return 0;
@@ -86,6 +91,8 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
         try{
             for (Order order:
                     orders) {
+                //默认用户下订单就已经付款
+                order.setOrderIsPay("1");
                 order.setCreateTime(new Date());
                 orderMapper.insertSelective(order);
             }

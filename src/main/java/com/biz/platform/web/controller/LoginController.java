@@ -63,7 +63,7 @@ public class LoginController {
     }
 
 
-    //登录
+    //获取当前已经登录的用户信息
     @RequestMapping("/getCurrentLoginUser.do")
     @ResponseBody
     public User getCurrentLoginUser(HttpServletRequest request){

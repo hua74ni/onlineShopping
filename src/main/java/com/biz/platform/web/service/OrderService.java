@@ -1,11 +1,9 @@
 package com.biz.platform.web.service;
 
+import com.biz.platform.web.pojo.ConfirmOrder;
 import com.biz.platform.web.pojo.Order;
 import com.biz.platform.web.pojo.User;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
-
-import java.util.List;
 
 /**
  * Created by huangdonghua on 2017/12/14.
@@ -54,5 +52,5 @@ public interface OrderService {
      * @param orders
      * @return
      */
-    public int batchAddOder(List<Order> orders);
+    public int batchAddOder(ConfirmOrder orders);
 }

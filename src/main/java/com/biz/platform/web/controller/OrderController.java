@@ -1,6 +1,7 @@
 package com.biz.platform.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.biz.platform.web.pojo.ConfirmOrder;
 import com.biz.platform.web.pojo.Order;
 import com.biz.platform.web.pojo.User;
 import com.biz.platform.web.service.OrderService;
@@ -52,11 +53,11 @@ public class OrderController {
     //批量添加订单 未完善
     @RequestMapping("/batchAddOder.do")
     @ResponseBody
-    public AjaxResult batchAddOder(@RequestBody String orderString,HttpServletRequest request){
+    public AjaxResult batchAddOder(@RequestBody ConfirmOrder confirmOrder, HttpServletRequest request){
 
-        List<Order> orders = JSONObject.parseArray(orderString, Order.class);
+//        List<Order> orders = JSONObject.parseArray(orderString, Order.class);
 
-        int result = orderService.batchAddOder(orders);
+        int result = orderService.batchAddOder(confirmOrder);
 
         //将临时的订单取消
         if(result == 1){
@@ -83,7 +84,12 @@ public class OrderController {
         return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
     }
 
-    //添加临时订单
+    /**
+     * 添加临时订单
+     * @param order
+     * @param request
+     * @return
+     */
     @RequestMapping("/addTempOrder.do")
     @ResponseBody
     public List<Order> AddTempOrder(@RequestBody Order order,HttpServletRequest request){
@@ -108,7 +114,12 @@ public class OrderController {
         return list;
     }
 
-    //删除临时订单
+    /**
+     * 删除临时订单
+     * @param request
+     * @param order     需要的数据  orderId
+     * @return
+     */
     @RequestMapping("/deleteTempOrder.do")
     @ResponseBody
     public List<Order> deleteTempOrder(HttpServletRequest request,@RequestBody Order order){
@@ -134,7 +145,7 @@ public class OrderController {
         return tempList;
     }
 
-    //显示临时订单
+    //展示临时订单
     @RequestMapping("/getTempOrder.do")
     @ResponseBody
     public List<Order> getTempOrder(HttpServletRequest request){
@@ -148,6 +159,72 @@ public class OrderController {
         }
 
         return list;
+    }
+
+    /**
+     * 确认订单
+     * @param order     需要的数据orderId
+     * @param request
+     * @return
+     */
+    @RequestMapping("/confirmOrder.do")
+    @ResponseBody
+    public AjaxResult confirmOrder(@RequestBody Order order, HttpServletRequest request){
+
+        order = orderService.getOrderByOrderId(order);
+
+        User loginUser = (User) request.getSession().getAttribute("loginUser");
+
+        if("buyer".equals(loginUser.getUserType())){
+            if(order.getOrderBuyerId().equals(loginUser.getUserId())){
+                order.setOrderBuyerStatu("1");
+            }
+        }else if("shop".equals(loginUser.getUserType())){
+            if(order.getOrderShopId().equals(loginUser.getUserId())){
+                order.setOrderShopStatu("1");
+            }
+        }
+
+        if("1".equals(order.getOrderBuyerStatu()) && "1".equals(order.getOrderShopStatu())){
+            order.setOrderStatu("1");
+        }
+
+        int result = orderService.updateOrder(order);
+
+        return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
+    }
+
+    /**
+     * 取消订单
+     * @param order  需要的数据 orderId
+     * @param request
+     * @return
+     */
+    @RequestMapping("/cancelOrder.do")
+    @ResponseBody
+    public AjaxResult cancelOrder(@RequestBody Order order, HttpServletRequest request){
+
+        order = orderService.getOrderByOrderId(order);
+
+        User loginUser = (User) request.getSession().getAttribute("loginUser");
+
+        if("buyer".equals(loginUser.getUserType())){
+            if(order.getOrderBuyerId().equals(loginUser.getUserId())){
+                order.setOrderStatu("3");
+            }
+        }else if("shop".equals(loginUser.getUserType())){
+            if(order.getOrderShopId().equals(loginUser.getUserId())){
+                order.setOrderShopStatu("3");
+            }
+        }
+
+        if("3".equals(order.getOrderBuyerStatu()) && "3".equals(order.getOrderShopStatu())){
+            order.setOrderStatu("3");
+        }
+
+        int result = orderService.updateOrder(order);
+
+        return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
     }
 
     //通过userId获取该用户的订单信息 进行分页

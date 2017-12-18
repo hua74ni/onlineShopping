@@ -1,6 +1,7 @@
 package com.biz.platform.web.mapper;
 
 import com.biz.platform.web.pojo.Goods;
+import com.biz.platform.web.vo.GoodsVo;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -17,4 +18,11 @@ public interface GoodsMapper extends Mapper<Goods>{
      * @return
      */
     public List<Goods> getGoodsByUserId(@Param("userId") String userId);
+
+    /**
+     * 首页遍历商品 可选择类型 搜索 已分页
+     * @param goodsVo
+     * @return
+     */
+    public List<Goods> queryGoodsHomePage(@Param("goodsVo") GoodsVo goodsVo);
 }
