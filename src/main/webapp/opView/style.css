@@ -3334,6 +3334,7 @@ a.meanmenu-reveal i {
   margin-right: 10px;
   margin-top: 3px;
 }
+.login-reg-form form input[type="submit"],
 .login-reg-form form input[type="button"] {
   background-color: #282828;
   border: medium none;

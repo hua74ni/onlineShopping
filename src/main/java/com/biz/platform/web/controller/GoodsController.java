@@ -2,8 +2,10 @@ package com.biz.platform.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.biz.platform.web.pojo.Goods;
+import com.biz.platform.web.pojo.Shop;
 import com.biz.platform.web.pojo.User;
 import com.biz.platform.web.service.GoodsService;
+import com.biz.platform.web.service.ShopService;
 import com.biz.platform.web.utils.AjaxResult;
 import com.biz.platform.web.vo.GoodsVo;
 import com.github.pagehelper.PageInfo;
@@ -34,10 +36,13 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
+    @Autowired
+    private ShopService shopService;
+
     @RequestMapping("/loadGoods.do")
     @ResponseBody
-    public Goods loadGoods(@RequestBody Goods goods){
-        return goodsService.getGoodsByGoodsId(goods);
+    public AjaxResult loadGoods(@RequestBody Goods goods){
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,goodsService.getGoodsByGoodsId(goods));
     }
 
     @RequestMapping("/goGoodsRedirect.do")
@@ -49,11 +54,17 @@ public class GoodsController {
     }
 
     @RequestMapping("/addGoods.do")
-    public String addGoods(MultipartFile goodsImage, Goods goods, HttpServletRequest request){
+    @ResponseBody
+    public AjaxResult addGoods(MultipartFile goodsImage, Goods goods, HttpServletRequest request){
 
+        User loginUser = (User) request.getSession().getAttribute("loginUser");
+
+        Shop shop = shopService.getShopByUserId(loginUser.getUserId());
+
+        goods.setGoodsShopId(shop.getShopId());
         int result = goodsService.addGoods(goodsImage,goods);
 
-        return "redirect:goGoodsRedirect.do?result="+result;
+        return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
     }
 
     @RequestMapping("/updateGoods.do")
@@ -86,13 +97,13 @@ public class GoodsController {
     @RequestMapping("/getGoodsByUserId.do")
     @ResponseBody
     public AjaxResult getGoodsByUserId(@RequestBody JSONObject jsonObject,
-                                        @RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
-                                        @RequestParam(name = "pageSize",defaultValue = "8") int pageSize,
+                                        @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+                                        @RequestParam(name = "pageSize",defaultValue = "5") int pageSize,
                                         HttpServletRequest request){
 
-        if(jsonObject != null && jsonObject.size() == 2){
+        if(jsonObject != null && jsonObject.size() == 1){
             pageNum = jsonObject.getInteger("pageNum");
-            pageSize = jsonObject.getInteger("pageSize");
+//            pageSize = jsonObject.getInteger("pageSize");
         }
 
         User user = (User) request.getSession().getAttribute("loginUser");

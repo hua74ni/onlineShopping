@@ -8,15 +8,15 @@ import com.biz.platform.web.service.ShopService;
 import com.biz.platform.web.utils.AjaxResult;
 import com.biz.platform.web.utils.CollectionUtils;
 import com.biz.platform.web.utils.StringUtils;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
-import com.google.gson.Gson;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -57,18 +57,29 @@ public class OrderController {
         return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
     }
 
-    //批量添加订单 未完善
+    //批量添加订单
     @RequestMapping("/batchAddOder.do")
     @ResponseBody
-    public AjaxResult batchAddOder(@RequestBody ConfirmOrder confirmOrder, HttpServletRequest request){
+    public AjaxResult batchAddOder(@RequestBody User user, HttpServletRequest request){
 
 //        List<Order> orders = JSONObject.parseArray(orderString, Order.class);
+        ConfirmOrder confirmOrder = new ConfirmOrder();
+        LinkedBlockingDeque<Order> tempOrder = (LinkedBlockingDeque<Order>) request.getSession().getAttribute("tempOrder");
+        User loginUser = (User) request.getSession().getAttribute("loginUser");
+
+        if(user!= null && loginUser != null){
+            user.setUserId(loginUser.getUserId());
+        }
+
+        List<Order> list = new ArrayList<Order>(tempOrder);
+        confirmOrder.setOrders(list);
+        confirmOrder.setUser(user);
 
         int result = orderService.batchAddOder(confirmOrder);
 
         //将临时的订单取消
         if(result == 1){
-            request.getSession().setAttribute("tempOrder",new ArrayList<Order>());
+            request.getSession().setAttribute("tempOrder",new LinkedBlockingDeque<Order>());
         }
 
         return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
@@ -101,16 +112,13 @@ public class OrderController {
     @ResponseBody
     public AjaxResult AddTempOrder(@RequestBody Order order,HttpServletRequest request){
 
-//        List<Order> list = new ArrayList<Order>();
-
-        LinkedBlockingDeque deque = new LinkedBlockingDeque();
-
         Goods goods = new Goods();
         goods.setGoodsId(order.getGoodsId());
 
         //从session 中获取临时订单
-//        List<Order> tempList = (List<Order>) request.getSession().getAttribute("tempOrder");
         LinkedBlockingDeque<Order> tempDeque = (LinkedBlockingDeque<Order>) request.getSession().getAttribute("tempOrder");
+
+        boolean flag = true;
 
         if(!CollectionUtils.isEmpty(tempDeque)){
             for (Order _order:
@@ -120,29 +128,35 @@ public class OrderController {
                     tempDeque.remove(_order);
                     _order.setGoodsNum(tmp + 1);
                     tempDeque.add(_order);
+                    flag = false;
                 }
             }
         }
 
-        goods = goodsService.getGoodsByGoodsId(goods);
+        //如果已经存在了 就不添加，数量加1即可
+        if(flag){
+            goods = goodsService.getGoodsByGoodsId(goods);
 
-        Shop shop = new Shop();
-        shop.setShopId(goods.getGoodsShopId());
-        shop = shopService.getShopByShopId(shop);
+            Shop shop = new Shop();
+            shop.setShopId(goods.getGoodsShopId());
+            shop = shopService.getShopByShopId(shop);
 
-        order.setOrderId(UUID.randomUUID().toString());
-        order.setOrderShopId(goods.getGoodsShopId());
-        order.setOrderShopName(shop.getShopName());
-        order.setGoodsId(goods.getGoodsId());
-        order.setGoodsName(goods.getGoodsName());
-        order.setGoodsLogoPath(goods.getGoodsLogoPath());
-        order.setGoodsNum(1);
-        order.setGoodsPrice(goods.getGoodsPrice());
 
-        if(CollectionUtils.isEmpty(tempDeque)){
-            tempDeque = new LinkedBlockingDeque<Order>();
+            order.setOrderId(UUID.randomUUID().toString());
+            order.setOrderShopId(goods.getGoodsShopId());
+            order.setOrderShopName(shop.getShopName());
+            order.setDeliveryStartAddr(shop.getShopAddr());
+            order.setGoodsId(goods.getGoodsId());
+            order.setGoodsName(goods.getGoodsName());
+            order.setGoodsLogoPath(goods.getGoodsLogoPath());
+            order.setGoodsNum(1);
+            order.setGoodsPrice(goods.getGoodsPrice());
+
+            if(CollectionUtils.isEmpty(tempDeque)){
+                tempDeque = new LinkedBlockingDeque<Order>();
+            }
+            tempDeque.add(order);
         }
-        tempDeque.add(order);
 
         request.getSession().setAttribute("tempOrder",tempDeque);
 
@@ -219,7 +233,9 @@ public class OrderController {
                 order.setOrderBuyerStatu("1");
             }
         }else if("shop".equals(loginUser.getUserType())){
-            if(order.getOrderShopId().equals(loginUser.getUserId())){
+            Shop shop = shopService.getShopByUserId(loginUser.getUserId());
+
+            if(order.getOrderShopId().equals(shop.getShopId())){
                 order.setOrderShopStatu("1");
             }
         }
@@ -232,6 +248,42 @@ public class OrderController {
 
         return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
     }
+
+
+    /**
+     * 获取生成订单
+     * @param updateOrderString
+     * @param request
+     * @return
+     */
+    @RequestMapping("/generatingOrder.do")
+    @ResponseBody
+    public AjaxResult generatingOrder(@RequestBody String updateOrderString ,HttpServletRequest request){
+
+        List<Order> orders = JSONObject.parseArray(updateOrderString,Order.class);
+
+        LinkedBlockingDeque<Order> tempDeque = (LinkedBlockingDeque<Order>) request.getSession().getAttribute("tempOrder");
+
+        LinkedBlockingDeque<Order> orderDeque = new LinkedBlockingDeque<Order>();
+
+        if(!CollectionUtils.isEmpty(orders)) {
+            for (Order _order :
+                    orders) {
+                for (Order originalOrder :
+                        tempDeque) {
+                    if (_order.getOrderId().equals(originalOrder.getOrderId())) {
+                        originalOrder.setGoodsNum(_order.getGoodsNum());
+                        originalOrder.setOrderTotalPrice((_order.getGoodsNum() * originalOrder.getGoodsPrice()));
+                        orderDeque.add(originalOrder);
+                    }
+                }
+            }
+            request.getSession().setAttribute("tempOrder",orderDeque);
+        }
+
+        return AjaxResult.SUCCESS;
+    }
+
 
     /**
      * 取消订单
@@ -249,10 +301,12 @@ public class OrderController {
 
         if("buyer".equals(loginUser.getUserType())){
             if(order.getOrderBuyerId().equals(loginUser.getUserId())){
-                order.setOrderStatu("3");
+                order.setOrderBuyerStatu("3");
             }
         }else if("shop".equals(loginUser.getUserType())){
-            if(order.getOrderShopId().equals(loginUser.getUserId())){
+            Shop shop = shopService.getShopByUserId(loginUser.getUserId());
+
+            if(order.getOrderShopId().equals(shop.getShopId())){
                 order.setOrderShopStatu("3");
             }
         }
@@ -269,13 +323,12 @@ public class OrderController {
     //通过userId获取该用户的订单信息 进行分页
     @RequestMapping("/getOrderByUserId.do")
     @ResponseBody
-    public AjaxResult getOrderByUserId(@RequestBody JSONObject jsonObject
-                                , @RequestParam(name = "pageNum",defaultValue = "0") int pageNum
-                                , @RequestParam(name = "pageSize",defaultValue = "10") int pageSize
+    public AjaxResult getOrderByUserId(@RequestBody(required = false) JSONObject jsonObject
+                                , @RequestParam(name = "pageNum",defaultValue = "1") int pageNum
+                                , @RequestParam(name = "pageSize",defaultValue = "5") int pageSize
                                 , HttpServletRequest request){
-        if(jsonObject != null && jsonObject.size() == 2){
+        if(jsonObject != null && jsonObject.size() == 1){
             pageNum = jsonObject.getInteger("pageNum");
-            pageSize = jsonObject.getInteger("pageSize");
         }
 
         User loginUser = (User) request.getSession().getAttribute("loginUser");

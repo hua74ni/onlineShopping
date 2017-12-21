@@ -41,18 +41,62 @@ public class UserController {
     //添加用户
     @RequestMapping("/addUser.do")
     @ResponseBody
-    public AjaxResult addUser(@RequestBody User user){
+    public AjaxResult addUser(@RequestBody User user,HttpServletRequest request){
+
+        if (user == null){
+            return new AjaxResult(AjaxResult.STATUS_ERROR,"请输入必填数据");
+        }
+        if (StringUtils.isNullOrBlank(user.getUserCode())){
+            return new AjaxResult(AjaxResult.STATUS_ERROR,"请输入账号");
+        }
+        if (StringUtils.isNullOrBlank(user.getUserName())){
+            return new AjaxResult(AjaxResult.STATUS_ERROR,"请输入账号");
+        }
+        if (StringUtils.isNullOrBlank(user.getUserPassword())){
+            return new AjaxResult(AjaxResult.STATUS_ERROR,"请输入密码");
+        }
+        if (StringUtils.isNullOrBlank(user.getUserType())){
+            return new AjaxResult(AjaxResult.STATUS_ERROR,"请选中用户类型");
+        }
+        if (StringUtils.isNullOrBlank(user.getUserAddr())){
+            return new AjaxResult(AjaxResult.STATUS_ERROR,"请输入地址");
+        }
 
         int result = userService.addUser(user);
+
+        if(result > 0){
+            User loginUser = userService.getUserByUserCode(user);
+            request.getSession().setAttribute("loginUser",loginUser);
+        }
+
         return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
     }
 
     //修改用户信息
     @RequestMapping("/updateUser.do")
     @ResponseBody
-    public AjaxResult updateUser(@RequestBody User user){
+    public AjaxResult updateUser(@RequestBody User user,HttpServletRequest request){
 
-        int result = userService.updateUser(user);
+        User loginUser = (User) request.getSession().getAttribute("loginUser");
+        loginUser = userService.getUserByUserId(loginUser);
+
+        if(StringUtils.isNotNullAndBlank(user.getUserPhone())){
+            loginUser.setUserPhone(user.getUserPhone());
+        }
+        if(StringUtils.isNotNullAndBlank(user.getUserName())){
+            loginUser.setUserName(user.getUserName());
+        }
+        if(StringUtils.isNotNullAndBlank(user.getUserPassword())){
+            loginUser.setUserPassword(user.getUserPassword());
+        }
+
+        int result = userService.updateUser(loginUser);
+
+        if(result > 0){
+            loginUser.setUserPassword("");
+            request.getSession().setAttribute("loginUser",loginUser);
+        }
+
         return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
     }
 

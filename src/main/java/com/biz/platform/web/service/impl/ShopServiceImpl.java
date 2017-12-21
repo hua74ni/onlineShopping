@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.File;
 import java.io.IOException;
@@ -131,6 +132,17 @@ public class ShopServiceImpl extends BaseService<Shop> implements ShopService {
         List<Shop> shops = shopMapper.selectAll();
 
         return new PageInfo<Shop>(shops);
+    }
+
+    @Override
+    public Shop getShopByUserId(String userId) {
+
+        Example example = new Example(Shop.class);
+        example.createCriteria().andEqualTo("shopUserId",userId);
+
+        List<Shop> shops = shopMapper.selectByExample(example);
+
+        return shops.get(0);
     }
 
     //删除旧的图片

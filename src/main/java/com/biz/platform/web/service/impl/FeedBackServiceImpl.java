@@ -2,8 +2,10 @@ package com.biz.platform.web.service.impl;
 
 import com.biz.platform.web.mapper.FeedBackMapper;
 import com.biz.platform.web.mapper.OrderMapper;
+import com.biz.platform.web.mapper.ShopMapper;
 import com.biz.platform.web.pojo.FeedBack;
 import com.biz.platform.web.pojo.Order;
+import com.biz.platform.web.pojo.Shop;
 import com.biz.platform.web.service.BaseService;
 import com.biz.platform.web.service.FeedBackService;
 import com.biz.platform.web.utils.CollectionUtils;
@@ -31,6 +33,9 @@ public class FeedBackServiceImpl extends BaseService<FeedBack> implements FeedBa
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private ShopMapper shopMapper;
+
     @Override
     public FeedBack getFeedBackByFeedBackId(FeedBack feedBack) {
         //feedBack不能为空 feedBackId和feedBackMsg不能为空也不能为空值
@@ -42,11 +47,11 @@ public class FeedBackServiceImpl extends BaseService<FeedBack> implements FeedBa
 
     @Override
     public int addFeedBack(FeedBack feedBack) {
-        if(feedBack == null || StringUtils.isNotNullAndBlank(feedBack.getOrederId()) || StringUtils.isNotNullAndBlank(feedBack.getFeedbackMsg()) ){
+        if(feedBack == null || StringUtils.isNullOrBlank(feedBack.getOrderId()) || StringUtils.isNullOrBlank(feedBack.getFeedbackMsg()) ){
             return 0;
         }
 
-        String orderId = feedBack.getOrederId();
+        String orderId = feedBack.getOrderId();
         Order order = orderMapper.selectByPrimaryKey(orderId);
 
         //买家和当前登录用户编码不一样不可评论
@@ -116,21 +121,41 @@ public class FeedBackServiceImpl extends BaseService<FeedBack> implements FeedBa
     @Override
     public int revertFeedBack(FeedBack feedBack) {
 
-        if(feedBack == null || StringUtils.isNotNullAndBlank(feedBack.getFeedBackId()) || StringUtils.isNotNullAndBlank(feedBack.getShopRevert()) ){
+        if(feedBack == null || StringUtils.isNullOrBlank(feedBack.getFeedBackId()) || StringUtils.isNullOrBlank(feedBack.getShopRevert()) ){
             return 0;
         }
 
         //当前登录用户的userId
         String userId = feedBack.getShopId();
 
+        String msg = feedBack.getShopRevert();
+
         feedBack = feedBackMapper.selectByPrimaryKey(feedBack.getFeedBackId());
 
-        if(!feedBack.getShopId().equals(userId)){
+        feedBack.setShopRevert(msg);
+
+        Example example1 = new Example(Shop.class);
+        example1.createCriteria().andEqualTo("shopUserId",userId);
+
+        List<Shop> shops = shopMapper.selectByExample(example1);
+
+        Shop shop = shops.get(0);
+
+        if(!feedBack.getShopId().equals(shop.getShopId())){
             logger.error("商家编码和当前登录用户编码不一样不可回复");
             return 0;
         }
 
-        return feedBackMapper.insertSelective(feedBack);
+        return feedBackMapper.updateByPrimaryKey(feedBack);
+    }
+
+    @Override
+    public List<FeedBack> getFeedBackByGoodsId(FeedBack feedBack) {
+
+        Example example = new Example(FeedBack.class);
+        example.createCriteria().andEqualTo("goodsId",feedBack.getGoodsId());
+
+        return feedBackMapper.selectByExample(example);
     }
 
 }

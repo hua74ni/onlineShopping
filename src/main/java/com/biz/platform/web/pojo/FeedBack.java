@@ -20,7 +20,7 @@ public class FeedBack {
 
     //订单ID
     @Column(name = "order_id")
-    private String orederId;
+    private String orderId;
 
     //商品ID
     @Column(name = "goods_id")
@@ -62,12 +62,12 @@ public class FeedBack {
         this.feedBackId = feedBackId;
     }
 
-    public String getOrederId() {
-        return orederId;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setOrederId(String orederId) {
-        this.orederId = orederId;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getGoodsId() {
@@ -138,7 +138,7 @@ public class FeedBack {
     public String toString() {
         return "FeedBack{" +
                 "feedBackId='" + feedBackId + '\'' +
-                ", orederId='" + orederId + '\'' +
+                ", orderId='" + orderId + '\'' +
                 ", goodsId='" + goodsId + '\'' +
                 ", buyerId='" + buyerId + '\'' +
                 ", buyerName='" + buyerName + '\'' +

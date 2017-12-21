@@ -1,6 +1,7 @@
 package com.biz.platform.web.service.impl;
 
 import com.biz.platform.web.mapper.OrderMapper;
+import com.biz.platform.web.mapper.ShopMapper;
 import com.biz.platform.web.pojo.ConfirmOrder;
 import com.biz.platform.web.pojo.Order;
 import com.biz.platform.web.pojo.Shop;
@@ -27,6 +28,9 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private ShopMapper shopMapper;
 
     @Override
     public Order getOrderByOrderId(Order order) {
@@ -69,7 +73,14 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
         if("buyer".equals(user.getUserType())){
             example.createCriteria().andEqualTo("orderBuyerId",user.getUserId());
         }else if ("shop".equals(user.getUserType())){
-            example.createCriteria().andEqualTo("orderShopId",user.getUserId());
+            Example example1 = new Example(Shop.class);
+            example1.createCriteria().andEqualTo("shopUserId",user.getUserId());
+            List<Shop> shops = shopMapper.selectByExample(example1);
+            if (CollectionUtils.isEmpty(shops)){
+                return new PageInfo<Order>(null);
+            }
+            Shop shop = shops.get(0);
+            example.createCriteria().andEqualTo("orderShopId",shop.getShopId());
         }
 
         List<Order> orders = orderMapper.selectByExample(example);
@@ -91,6 +102,12 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
         try{
             for (Order order:
                     orders) {
+
+                order.setOrderId(null);
+                order.setDeliveryEndAddr(user.getUserAddr());
+                order.setOrderTotalPrice(order.getGoodsPrice() * order.getGoodsNum());
+                order.setOrderBuyerId(user.getUserId());
+                order.setOrderBuyerName(user.getUserName());
                 //默认用户下订单就已经付款
                 order.setOrderIsPay("1");
                 order.setCreateTime(new Date());

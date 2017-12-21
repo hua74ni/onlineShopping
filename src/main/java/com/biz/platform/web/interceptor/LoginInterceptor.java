@@ -1,6 +1,8 @@
 package com.biz.platform.web.interceptor;
 
+import com.biz.platform.web.pojo.User;
 import com.biz.platform.web.utils.ResourcesUtil;
+import com.biz.platform.web.utils.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,13 +21,22 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         String url = request.getRequestURI();
 
-        List<String> anonURLs = ResourcesUtil.gekeyList("anonymousURL");
+        List<String> anonURLs = ResourcesUtil.gekeyList("authentURL");
         for (String str:
                 anonURLs) {
             if(url.indexOf(str) >= 0){
+                User loginUser = (User) request.getSession().getAttribute("loginUser");
+                if(loginUser == null || StringUtils.isNullOrBlank(loginUser.getUserId())){
+//                    request.getRequestDispatcher("/opView/login.html").forward(request,response);
+                    response.sendRedirect("/onlineShopping/opView/login.html");
+                    return false;
+                }
                return true;
             }
         }
+
+
+
 //
 //        if(url.indexOf("/authCode") >= 0 || url.indexOf("/login") >= 0){
 //            return true;

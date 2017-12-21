@@ -54,4 +54,11 @@ public interface ShopService {
      * @return
      */
     PageInfo<Shop> queryShopPage(int pageNum, int pageSize);
+
+    /**
+     * 通过userId获取对应的商家信息
+     * @param userId
+     * @return
+     */
+    public Shop getShopByUserId(String userId);
 }

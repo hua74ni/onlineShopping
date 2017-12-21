@@ -2,6 +2,8 @@ package com.biz.platform.web.service;
 
 import com.biz.platform.web.pojo.FeedBack;
 
+import java.util.List;
+
 /**
  * Created by huangdonghua on 2017/12/14.
  */
@@ -48,4 +50,11 @@ public interface FeedBackService {
      * @return
      */
     public int revertFeedBack(FeedBack feedBack);
+
+    /**
+     * 通过goodsId获取商品
+     * @param feedBack
+     * @return
+     */
+    public List<FeedBack> getFeedBackByGoodsId(FeedBack feedBack);
 }

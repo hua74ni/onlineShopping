@@ -1,7 +1,10 @@
 package com.biz.platform.web.service.impl;
 
 import com.biz.platform.web.mapper.GoodsMapper;
+import com.biz.platform.web.mapper.ShopMapper;
+import com.biz.platform.web.pojo.FeedBack;
 import com.biz.platform.web.pojo.Goods;
+import com.biz.platform.web.pojo.Order;
 import com.biz.platform.web.pojo.Shop;
 import com.biz.platform.web.service.BaseService;
 import com.biz.platform.web.service.GoodsService;
@@ -33,6 +36,9 @@ public class GoodsServiceImpl extends BaseService<Goods> implements GoodsService
 
     @Autowired
     private GoodsMapper goodsMapper;
+
+    @Autowired
+    private ShopMapper shopMapper;
 
     @Override
     public Goods getGoodsByGoodsId(Goods goods) {
@@ -126,7 +132,7 @@ public class GoodsServiceImpl extends BaseService<Goods> implements GoodsService
     public PageInfo<Goods> getGoodsByUserId(int pageNum, int pageSize, String userId) {
         PageHelper.startPage(pageNum,pageSize);
         List<Goods> goods = goodsMapper.getGoodsByUserId(userId);
-        return new PageInfo<Goods>();
+        return new PageInfo<Goods>(goods);
     }
 
     @Override
@@ -148,6 +154,26 @@ public class GoodsServiceImpl extends BaseService<Goods> implements GoodsService
     @Override
     public List<String> getGoodsAllType() {
         return goodsMapper.getGoodsAllType();
+    }
+
+    @Override
+    public int IsGoodsByUserId(FeedBack feedBack) {
+
+        Example example1 = new Example(Shop.class);
+        example1.createCriteria().andEqualTo("shopUserId",feedBack.getShopId());
+
+        List<Shop> shops = shopMapper.selectByExample(example1);
+
+        Shop shop = shops.get(0);
+
+        Example example = new Example(Goods.class);
+        example.createCriteria()
+                .andEqualTo("goodsShopId",shop.getShopId())
+                .andEqualTo("goodsId",feedBack.getGoodsId());
+
+        List<Goods> orders = goodsMapper.selectByExample(example);
+
+        return orders.size();
     }
 
     //删除旧的图片

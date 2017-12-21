@@ -4,7 +4,7 @@
 
     <resultMap type="com.biz.platform.web.pojo.FeedBack" id="feedBackResultMap">
         <result column="feedback_id" property="feedBackId"/>
-        <result column="order_id" property="orederId"/>
+        <result column="order_id" property="orderId"/>
         <result column="goods_id" property="goodsId"/>
         <result column="buyer_id" property="buyerId"/>
         <result column="buyer_name" property="buyerName"/>

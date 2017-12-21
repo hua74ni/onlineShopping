@@ -28,6 +28,10 @@
     <servlet-name>springmvc</servlet-name>
     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>springmvc</servlet-name>
+    <url-pattern>*.html</url-pattern>
+  </servlet-mapping>
 
   <!-- post乱码过滤器 -->
   <filter>
@@ -44,7 +48,7 @@
   </filter-mapping>
 
   <welcome-file-list>
-    <welcome-file>/index.do</welcome-file>
+    <!--<welcome-file>/index.do</welcome-file>-->
     <welcome-file>/opView/product-list.html</welcome-file>
   </welcome-file-list>
 </web-app>

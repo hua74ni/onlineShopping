@@ -48,4 +48,11 @@ public interface UserService {
      * @return
      */
     public int checkUserCode(String userCode);
+
+    /**
+     * 通过userCode获取user信息
+     * @param user
+     * @return
+     */
+    public User getUserByUserCode(User user);
 }

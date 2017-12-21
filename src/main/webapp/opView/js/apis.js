@@ -100,6 +100,50 @@ var API_ADDRESS = {
     'getGoodsAllType': {
         url: '/goods/getGoodsAllType.do',
         method: 'post'
+    },
+    'getFeedBackByGoodsId': {
+        url: '/feedBack/getFeedBackByGoodsId.do',
+        method: 'post'
+    },
+    'checkUserIsFeedBack': {
+        url: '/feedBack/checkUserIsFeedBack.do',
+        method: 'post'
+    },
+    'generatingOrder': {
+        url: '/order/generatingOrder.do',
+        method: 'post'
+    },
+    'batchAddOder': {
+        url: '/order/batchAddOder.do',
+        method: 'post'
+    },
+    'getOrderByUserId': {
+        url: '/order/getOrderByUserId.do',
+        method: 'post'
+    },
+    'addGoods': {
+        url: '/goods/addGoods.do',
+        method: 'post'
+    },
+    'addFeedBack': {
+        url: '/feedBack/addFeedBack.do',
+        method: 'post'
+    },
+    'revertFeedBack': {
+        url: '/feedBack/revertFeedBack.do',
+        method: 'post'
+    },
+    'IsGoodsByUserId': {
+        url: '/feedBack/isGoodsByUserId.do',
+        method: 'post'
+    },
+    'cancelOrder': {
+        url: '/order/cancelOrder.do',
+        method: 'post'
+    },
+    'confirmOrder': {
+        url: '/order/confirmOrder.do',
+        method: 'post'
     }
   }
 }

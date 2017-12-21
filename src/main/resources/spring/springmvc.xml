@@ -24,10 +24,11 @@
     <mvc:annotation-driven></mvc:annotation-driven>
 
     <!-- /** -> 该包下的路径和子路径 -->
-    <!--<mvc:resources mapping="/css/**" location="/resouces/css/" />-->
-    <mvc:resources mapping="/js/**" location="/resouces/js/" />
-    <!--<mvc:resources mapping="/images/**" location="/resouces/image/" />-->
-    <!--<mvc:resources mapping="/*.html" location="/webapp/" />-->
+    <mvc:resources mapping="/css/**" location="/opView/css/" />
+    <mvc:resources mapping="/js/**" location="/opView/js/" />
+    <mvc:resources mapping="/img/**" location="/opView/img/" />
+    <mvc:resources mapping="/*.html" location="/opView/" />
+    <mvc:resources mapping="/opView/**/" location="/opView/" />
 
     <!--
         @requestBody    spring支持 自动将json格式转换为java

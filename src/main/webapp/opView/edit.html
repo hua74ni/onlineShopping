@@ -9,23 +9,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
-    
+    <link rel="shortcut icon" type="image/x-icon" href="/onlineShopping/opView/img/favicon.ico">
+
     <!-- All CSS Files -->
     <!-- Bootstrap css -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="/onlineShopping/opView/css/bootstrap.min.css">
+    <!-- Element UI -->
+    <link rel="stylesheet" href="/onlineShopping/opView/css/element.css">
     <!-- Icon Font -->
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/pe-icon-7-stroke.css">
+    <link rel="stylesheet" href="/onlineShopping/opView/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/onlineShopping/opView/css/pe-icon-7-stroke.css">
     <!-- Plugins css file -->
-    <link rel="stylesheet" href="css/plugins.css">
+    <link rel="stylesheet" href="/onlineShopping/opView/css/plugins.css">
     <!-- Theme main style -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/onlineShopping/opView/style.css">
     <!-- Responsive css -->
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="/onlineShopping/opView/css/responsive.css">
 
     <!-- Modernizr JS -->
-    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    <script src="/onlineShopping/opView/js/vendor/modernizr-2.8.3.min.js"></script>
     
 </head>
 
@@ -38,94 +40,81 @@
 <div class="wrapper">
 
 <!-- START HEADER SECTION -->
-<header class="header-section section sticker">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <!-- logo -->
-                    <div class="header-logo float-left">
-                        <a href="index.html"><img src="img/logo.png" alt="main logo"></a>
-                    </div>
-                    <!-- header-search & total-cart -->
-                    <div class="float-right">
-                        <div class="header-option-btns float-right">
-                            <!-- header-search -->
-                            <div class="header-search float-left">
-                                <button class="search-toggle" data-toggle="dropdown"><i class="pe-7s-search"></i></button>
-                                <div class="dropdown-menu header-search-form">
-                                    <form action="#">
-                                        <input type="text" placeholder="Search">
-                                        <button><i class="fa fa-long-arrow-right"></i></button>
-                                    </form>
+<header class="header-section section sticker" id="shopCart">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- logo -->
+                <div class="header-logo float-left">
+                    <a href="product-list.html"><img src="/onlineShopping/opView/img/logo.png" alt="main logo"></a>
+                </div>
+                <!-- header-search & total-cart -->
+                <div class="float-right">
+                    <div class="header-option-btns float-right">
+                        <!-- header Account -->
+                        <div class="header-account float-left" v-if="user.userId">
+                            <ul>
+                                <li><a href="#" data-toggle="dropdown"><i class="pe-7s-config"></i></a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="/onlineShopping/opView/myaccount.html">我的账号</a>
+                                        </li>
+                                        <li v-if="user.userType === 'shop'">
+                                            <a href="/onlineShopping/opView/product-manage.html">商品管理</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Header Cart -->
+                        <div class="header-cart float-left" v-if="user.userType === 'buyer'">
+                            <!-- Cart Toggle -->
+                            <a class="cart-toggle" href="#" data-toggle="dropdown">
+                                <i class="pe-7s-cart"></i>
+                                <span>{{cartList.length}}</span>
+                            </a>
+                            <!-- Mini Cart Brief -->
+                            <div class="mini-cart-brief dropdown-menu text-left">
+                                <!-- Cart Products -->
+                                <div class="all-cart-product clearfix" v-for="ci in cartList">
+                                    <div class="single-cart clearfix">
+                                        <div class="cart-image">
+                                            <a href="/onlineShopping/opView/product-details.html">
+                                                <img :src="'/onlineShopping/shop/loadImage.do?type=goods&shopLogoPath=' + ci.goodsLogoPath" alt=""></a>
+                                        </div>
+                                        <div class="cart-info">
+                                            <h5><a href="/onlineShopping/opView/product-details.html">{{ci.goodsName}}</a></h5>
+                                            <p>{{ci.goodsNum}} x ￥{{ci.goodsPrice}}</p>
+                                            <a @click="delCart(ci.orderId)" class="cart-delete" title="Remove this item"><i class="pe-7s-trash"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- header Account -->
-                            <div class="header-account float-left">
-                                <ul>
-                                    <li><a href="#" data-toggle="dropdown"><i class="pe-7s-config"></i></a>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">我的账号</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- Header Cart -->
-                            <div class="header-cart float-left">
-                                <!-- Cart Toggle -->
-                                <a class="cart-toggle" href="#" data-toggle="dropdown">
-                                    <i class="pe-7s-cart"></i>
-                                    <span>2</span>
-                                </a>
-                                <!-- Mini Cart Brief -->
-                                <div class="mini-cart-brief dropdown-menu text-left">
-                                    <!-- Cart Products -->
-                                    <div class="all-cart-product clearfix">
-                                        <div class="single-cart clearfix">
-                                            <div class="cart-image">
-                                                <a href="product-details.html"><img src="img/product/cart-1.jpg" alt=""></a>
-                                            </div>
-                                            <div class="cart-info">
-                                                <h5><a href="product-details.html">Le Parc Minotti Chair</a></h5>
-                                                <p>1 x £9.00</p>
-                                                <a href="#" class="cart-delete" title="Remove this item"><i class="pe-7s-trash"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="single-cart clearfix">
-                                            <div class="cart-image">
-                                                <a href="product-details.html"><img src="img/product/cart-2.jpg" alt=""></a>
-                                            </div>
-                                            <div class="cart-info">
-                                                <h5><a href="product-details.html">DSR Eiffel chair</a></h5>
-                                                <p>1 x £9.00</p>
-                                                <a href="#" class="cart-delete" title="Remove this item"><i class="pe-7s-trash"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Cart Total -->
-                                    <div class="cart-totals">
-                                        <h5>Total <span>£12.00</span></h5>
-                                    </div>
-                                    <!-- Cart Button -->
-                                    <div class="cart-bottom  clearfix">
-                                        <a href="checkout.html">Check out</a>
-                                    </div>
+                                <!-- Cart Total -->
+                                <div class="cart-totals">
+                                    <h5>总计<span>￥{{Math.round10(total, -2)}}</span></h5>
+                                </div>
+                                <!-- Cart Button -->
+                                <div class="cart-bottom  clearfix">
+                                    <a href="cart.html">下单</a>
                                 </div>
                             </div>
                         </div>
-                        <nav class="main-menu menu-right float-right">
-                            <ul>
-                                <li><a href="index.html">首页</a></li>
-                                <li><a href="login.html">登录</a></li>
-                                <li><a href="register.html">注册</a></li>
-                            </ul>
-                        </nav>
                     </div>
-                    <div class="mobile-menu"></div>
+                    <nav class="main-menu menu-right float-right">
+                        <ul>
+                            <li><a href="/onlineShopping/opView/product-list.html">首页</a></li>
+                            <li v-if="!user.userId"><a href="/onlineShopping/opView/login.html">登录</a></li>
+                            <li v-if="!user.userId"><a href="/onlineShopping/opView/register.html">注册</a></li>
+                            <li v-if="user.userId"><a @click="logout" style="cursor:pointer">登出</a></li>
+                        </ul>
+                    </nav>
                 </div>
+                <div class="mobile-menu"></div>
             </div>
         </div>
-    </header>
-    <!-- END HEADER SECTION -->
+    </div>
+</header>
+<!-- END HEADER SECTION -->
 
 <!-- PAGE BANNER SECTION -->
 <div class="page-banner-section section">
@@ -153,20 +142,20 @@
                     <form action="#">
                         <div class="row">
                             <div class="col-xs-12 mb-20">
-                                <label for="r_c_name">用户名称<span class="required">*</span></label>
-                                <input id="r_c_name" v-model="editUser.userName" type="text"/>
+                                <label for="r_c_name">用户名称</label>
+                                <input id="r_c_name" placeholder="请输入用户名" v-model="editUser.userName" type="text"/>
                             </div>
                             <div class="col-xs-12 mb-20">
-                                <label for="r_password">密码<span class="required">*</span></label>
-                                <input id="r_password" v-model="editUser.userPassword" type="password" />
+                                <label for="r_password">密码</label>
+                                <input id="r_password" placeholder="留空表示不修改密码" v-model="editUser.userPassword" type="password" />
                             </div>
                             <div class="col-xs-12 mb-20">
-                                <label for="r_rePassword">确认密码<span class="required">*</span></label>
-                                <input id="r_rePassword" v-model="editUser.rePassword" type="password" />
+                                <label for="r_rePassword">确认密码</label>
+                                <input id="r_rePassword" placeholder="请输入确认密码" v-model="rePassword" type="password" />
                             </div>
                             <div class="col-xs-12 mb-20">
-                                <label for="r_city">手机<span class="required">*</span></label>
-                                <input id="r_city" v-model="editUser.userPhone" type="text"/>
+                                <label for="r_city">手机</label>
+                                <input id="r_city" placeholder="请输入手机" v-model="editUser.userPhone" type="text"/>
                             </div>
                             <div class="col-xs-12">
                                 <input value="编辑" name="update" class="inline" type="button" @click="updateUser">
@@ -231,45 +220,54 @@
 <!-- Placed JS at the end of the document so the pages load faster -->
 
 <!-- jQuery latest version -->
-<script src="js/vendor/jquery-3.1.1.min.js"></script>
+<script src="/onlineShopping/opView/js/vendor/jquery-3.1.1.min.js"></script>
 <!-- Bootstrap js -->
-<script src="js/bootstrap.min.js"></script>
+<script src="/onlineShopping/opView/js/bootstrap.min.js"></script>
 <!-- Plugins js -->
-<script src="js/plugins.js"></script>
+<script src="/onlineShopping/opView/js/plugins.js"></script>
 <!-- Ajax Mail js -->
-<script src="js/ajax-mail.js"></script>
+<script src="/onlineShopping/opView/js/ajax-mail.js"></script>
 
 <!-- Vue -->
-<script src="js/vendor/vue.min.js"></script>
+<script src="/onlineShopping/opView/js/vendor/vue.min.js"></script>
 <!-- Element -->
-<script src="js/vendor/element.min.js"></script>
+<script src="/onlineShopping/opView/js/vendor/element.min.js"></script>
 <!-- api -->
-<script src="js/apis.js"></script>
+<script src="/onlineShopping/opView/js/apis.js"></script>
 <!-- ajax -->
-<script src="js/ajax-plugin.js"></script>
+<script src="/onlineShopping/opView/js/ajax-plugin.js"></script>
+
+<!-- shopcart -->
+<script src="/onlineShopping/opView/js/shop-cart.js"></script>
 
 <!-- Main js -->
-<script src="js/main.js"></script>
+<script src="/onlineShopping/opView/js/main.js"></script>
 
 <script>
  var RegisterVM = new Vue({
      el:"#updateUser",
      data: {
-        editUser: {
-            userId: '',
-            userName: '',
-            userPassword: '',
-            rePassword: '',
-            userPhone: ''
-        }
+       rePassword: ''
+     },
+     computed: {
+       editUser: function () {
+          return shopCartVM.user
+       }
      },
      methods: {
          updateUser:function () {
              var self = this
+             if (self.rePassword !== self.editUser.userPassword) {
+               self.$notify.error({
+                 title: '提示',
+                 message: '两次密码不一致'
+               })
+               return
+             }
              this.$req('updateUser', {
                  "userId": self.editUser.userId,
-                 "userName": self.editUser.username,
-                 "userPassword": self.editUser.password,
+                 "userName": self.editUser.userName,
+                 "userPassword": self.editUser.userPassword,
                  "userPhone": self.editUser.userPhone
              }).then(function(data){
                  self.$notify.success({
@@ -277,7 +275,6 @@
                      message: '修改成功'
                  })
              }).catch(function(){
-
              })
          }
      }

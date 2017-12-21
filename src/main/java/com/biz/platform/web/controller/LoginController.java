@@ -46,6 +46,7 @@ public class LoginController {
         if(loginUser == null){
             return new AjaxResult(AjaxResult.STATUS_ERROR,"输入的账号或密码错误！");
         }
+        loginUser.setUserPassword("");
         request.getSession().setAttribute("loginUser",loginUser);
 
         return new AjaxResult(AjaxResult.STATUS_SUCCESS,loginUser);
@@ -54,12 +55,13 @@ public class LoginController {
 
     //用户退出
     @RequestMapping("/logout.do")
-    public String logout(HttpServletRequest request){
+    @ResponseBody
+    public AjaxResult logout(HttpServletRequest request){
 
         HttpSession session = request.getSession();
         session.invalidate();
 
-        return "redirect:login.jsp";
+        return AjaxResult.SUCCESS;
     }
 
 

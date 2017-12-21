@@ -1,14 +1,18 @@
 package com.biz.platform.web.service.impl;
 
+import com.biz.platform.web.mapper.ShopMapper;
 import com.biz.platform.web.mapper.UserMapper;
+import com.biz.platform.web.pojo.Shop;
 import com.biz.platform.web.pojo.User;
 import com.biz.platform.web.service.BaseService;
 import com.biz.platform.web.service.UserService;
+import com.biz.platform.web.utils.CollectionUtils;
 import com.biz.platform.web.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +24,9 @@ public class UserServiceImpl extends BaseService<User> implements UserService{
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ShopMapper shopMapper;
 
 
     @Override
@@ -59,7 +66,25 @@ public class UserServiceImpl extends BaseService<User> implements UserService{
             return 0;
         }
         user.setCreateTime(new Date());
-        return userMapper.insert(user);
+
+        int result = userMapper.insert(user);
+
+        if(result != 0){
+
+            Example example = new Example(User.class);
+            example.createCriteria().andEqualTo("userCode",user.getUserCode());
+
+            User tempUser = userMapper.selectByExample(example).get(0);
+
+            Shop shop = new Shop();
+            shop.setShopUserId(tempUser.getUserId());
+            shop.setShopName(tempUser.getUserName());
+            shop.setShopAddr(tempUser.getUserAddr());
+            shop.setCreateTime(new Date());
+            result = shopMapper.insertSelective(shop);
+        }
+
+        return result;
     }
 
     @Override
@@ -81,6 +106,21 @@ public class UserServiceImpl extends BaseService<User> implements UserService{
     @Override
     public int checkUserCode(String userCode) {
         return userMapper.checkUserCode(userCode);
+    }
+
+    @Override
+    public User getUserByUserCode(User user) {
+
+        Example example = new Example(User.class);
+        example.createCriteria().andEqualTo("userCode",user.getUserCode());
+
+        List<User> users = userMapper.selectByExample(example);
+
+        if(CollectionUtils.isEmpty(users)){
+            return null;
+        }
+
+        return users.get(0);
     }
 
 }

@@ -4,13 +4,14 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by huangdonghua on 2017/12/13.
  */
 @Table(name = "biz_platform_order")
-public class Order {
+public class Order implements Serializable {
 
     //订单编码
     @Id

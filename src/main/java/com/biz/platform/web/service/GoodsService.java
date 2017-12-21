@@ -1,5 +1,6 @@
 package com.biz.platform.web.service;
 
+import com.biz.platform.web.pojo.FeedBack;
 import com.biz.platform.web.pojo.Goods;
 import com.biz.platform.web.vo.GoodsVo;
 import com.github.pagehelper.PageInfo;
@@ -65,4 +66,11 @@ public interface GoodsService {
      * @return
      */
     public List<String> getGoodsAllType();
+
+    /**
+     * 判断该商品是否 是该商家的
+     * @param userId
+     * @return
+     */
+    public int IsGoodsByUserId(FeedBack userId);
 }

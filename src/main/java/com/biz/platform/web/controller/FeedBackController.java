@@ -1,12 +1,13 @@
 package com.biz.platform.web.controller;
 
-import com.biz.platform.web.pojo.FeedBack;
-import com.biz.platform.web.pojo.Goods;
-import com.biz.platform.web.pojo.Shop;
-import com.biz.platform.web.pojo.User;
+import com.alibaba.fastjson.JSONObject;
+import com.biz.platform.web.pojo.*;
 import com.biz.platform.web.service.FeedBackService;
+import com.biz.platform.web.service.GoodsService;
+import com.biz.platform.web.service.OrderService;
 import com.biz.platform.web.utils.AjaxResult;
 import com.biz.platform.web.utils.StringUtils;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +26,12 @@ public class FeedBackController {
     @Autowired
     private FeedBackService feedBackService;
 
+    @Autowired
+    private GoodsService goodsService;
+
+    @Autowired
+    private OrderService orderService;
+
     //通过feedBackId 获取 反馈(feedBack)信息
     @RequestMapping("/loadFeedBack.do")
     @ResponseBody
@@ -34,7 +41,7 @@ public class FeedBackController {
 
     /**
      * 添加 买家反馈信息
-     * @param feedBack  需要的数据：feedBackId、feedbackMsg、orderId
+     * @param feedBack  需要的数据：feedbackMsg、orderId
      * @param request
      * @return
      */
@@ -44,11 +51,21 @@ public class FeedBackController {
 
         User loginUser = (User) request.getSession().getAttribute("loginUser");
 
+        Order order = new Order();
+        order.setOrderId(feedBack.getOrderId());
+
+        order = orderService.getOrderByOrderId(order);
+
         if(loginUser.getUserType().equals("shop")){
             return new AjaxResult(AjaxResult.STATUS_ERROR,"当前登录的用户是商家不可评论商品");
         }
 
+        feedBack.setBuyerName(loginUser.getUserName());
         feedBack.setBuyerId(loginUser.getUserId());
+        feedBack.setOrderId(order.getOrderId());
+        feedBack.setGoodsId(order.getGoodsId());
+        feedBack.setShopId(order.getOrderShopId());
+
 
         int result = feedBackService.addFeedBack(feedBack);
         return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
@@ -79,9 +96,20 @@ public class FeedBackController {
 
         User user = (User) request.getSession().getAttribute("loginUser");
 
+        if(user == null){
+            return new AjaxResult(AjaxResult.STATUS_SUCCESS,0);
+        }
+
         String result = feedBackService.checkUserIsFeedBack(goods.getGoodsId(),user.getUserId());
 
-        return new AjaxResult(AjaxResult.STATUS_SUCCESS,request);
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,"",result);
+    }
+
+    //获取商品评论 通过goodsId
+    @RequestMapping("/getFeedBackByGoodsId.do")
+    @ResponseBody
+    public AjaxResult getFeedBackByGoodsId(@RequestBody FeedBack feedBack){
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,feedBackService.getFeedBackByGoodsId(feedBack));
     }
 
     /**
@@ -104,6 +132,23 @@ public class FeedBackController {
 
         int result = feedBackService.revertFeedBack(feedBack);
         return result > 0?AjaxResult.SUCCESS:AjaxResult.ERROR;
+    }
+
+    @RequestMapping("/isGoodsByUserId.do")
+    @ResponseBody
+    public AjaxResult isGoodsByUserId(@RequestBody FeedBack feedBack,HttpServletRequest request){
+
+        User loginUser = (User) request.getSession().getAttribute("loginUser");
+
+        if(loginUser.getUserType().equals("buyer")){
+            return new AjaxResult(AjaxResult.STATUS_SUCCESS,0);
+        }
+
+        feedBack.setShopId(loginUser.getUserId());
+
+        int result = goodsService.IsGoodsByUserId(feedBack);
+
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,result);
     }
 
 
