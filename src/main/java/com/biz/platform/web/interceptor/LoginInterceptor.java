@@ -1,10 +1,12 @@
 package com.biz.platform.web.interceptor;
 
+import com.biz.platform.web.utils.ResourcesUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by huangdonghua on 2017/11/7.
@@ -15,15 +17,15 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
 
-//        String url = request.getRequestURI();
-//
-//        List<String> anonURLs = ResourcesUtil.gekeyList("anonymousURL");
-//        for (String str:
-//                anonURLs) {
-//            if(url.indexOf(str) >= 0){
-//               return true;
-//            }
-//        }
+        String url = request.getRequestURI();
+
+        List<String> anonURLs = ResourcesUtil.gekeyList("anonymousURL");
+        for (String str:
+                anonURLs) {
+            if(url.indexOf(str) >= 0){
+               return true;
+            }
+        }
 //
 //        if(url.indexOf("/authCode") >= 0 || url.indexOf("/login") >= 0){
 //            return true;

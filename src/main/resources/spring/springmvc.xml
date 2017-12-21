@@ -24,9 +24,9 @@
     <mvc:annotation-driven></mvc:annotation-driven>
 
     <!-- /** -> 该包下的路径和子路径 -->
-    <mvc:resources mapping="/css/**" location="/resouces/css/" />
+    <!--<mvc:resources mapping="/css/**" location="/resouces/css/" />-->
     <mvc:resources mapping="/js/**" location="/resouces/js/" />
-    <mvc:resources mapping="/images/**" location="/resouces/image/" />
+    <!--<mvc:resources mapping="/images/**" location="/resouces/image/" />-->
     <!--<mvc:resources mapping="/*.html" location="/webapp/" />-->
 
     <!--
@@ -76,8 +76,8 @@
     <!-- 视图解析器 解析jsp视图，默认使用jstl标签，classpath下得有jstl包 -->
     <bean
             class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="WEB-INF/view/"></property>
-        <property name="suffix" value=".jsp"></property>
+        <property name="prefix" value="opView/"></property>
+        <property name="suffix" value=".html"></property>
         <!--			可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑-->
         <property name="viewClass">
             <value>org.springframework.web.servlet.view.InternalResourceView

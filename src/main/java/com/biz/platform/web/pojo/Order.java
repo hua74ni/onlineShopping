@@ -22,6 +22,14 @@ public class Order {
     @Column(name = "goods_id")
     private String goodsId;
 
+    //商品名
+    @Column(name = "goods_name")
+    private String goodsName;
+
+    //商品图片路径
+    @Column(name = "goods_logo_path")
+    private String goodsLogoPath;
+
     //商品数量
     @Column(name = "goods_num")
     private int goodsNum;
@@ -254,11 +262,29 @@ public class Order {
         this.lastModifyTime = lastModifyTime;
     }
 
+    public String getGoodsName() {
+        return goodsName;
+    }
+
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
+    }
+
+    public String getGoodsLogoPath() {
+        return goodsLogoPath;
+    }
+
+    public void setGoodsLogoPath(String goodsLogoPath) {
+        this.goodsLogoPath = goodsLogoPath;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
                 "orderId='" + orderId + '\'' +
                 ", goodsId='" + goodsId + '\'' +
+                ", goodsName='" + goodsName + '\'' +
+                ", goodsLogoPath='" + goodsLogoPath + '\'' +
                 ", goodsNum=" + goodsNum +
                 ", goodsPrice=" + goodsPrice +
                 ", orderTotalPrice=" + orderTotalPrice +

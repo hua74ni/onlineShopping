@@ -2,16 +2,11 @@ package com.biz.platform.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.biz.platform.web.pojo.Goods;
-import com.biz.platform.web.pojo.Order;
-import com.biz.platform.web.pojo.Shop;
 import com.biz.platform.web.pojo.User;
 import com.biz.platform.web.service.GoodsService;
 import com.biz.platform.web.utils.AjaxResult;
-import com.biz.platform.web.utils.PropertiesUtil;
 import com.biz.platform.web.vo.GoodsVo;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,18 +75,19 @@ public class GoodsController {
     //首页遍历商品 可选择类型 搜索 分页
     @RequestMapping("/queryGoodsHomePage.do")
     @ResponseBody
-    public PageInfo<Goods> queryGoodsHomePage(@RequestBody GoodsVo goodsVo){
+    public AjaxResult queryGoodsHomePage(@RequestBody GoodsVo goodsVo){
 
         PageInfo<Goods> goodsPage = goodsService.queryGoodsHomePage(goodsVo);
 
-        return goodsPage;
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,goodsPage);
     }
 
+    //获取当前商家对应商家的商品 进行分页
     @RequestMapping("/getGoodsByUserId.do")
     @ResponseBody
-    public PageInfo<Goods> getGoodsByUserId(@RequestBody JSONObject jsonObject,
+    public AjaxResult getGoodsByUserId(@RequestBody JSONObject jsonObject,
                                         @RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
-                                        @RequestParam(name = "pageSize",defaultValue = "10") int pageSize,
+                                        @RequestParam(name = "pageSize",defaultValue = "8") int pageSize,
                                         HttpServletRequest request){
 
         if(jsonObject != null && jsonObject.size() == 2){
@@ -106,7 +98,44 @@ public class GoodsController {
         User user = (User) request.getSession().getAttribute("loginUser");
         PageInfo<Goods> goodsPage = goodsService.getGoodsByUserId(pageNum,pageSize,user.getUserId());
 
-        return goodsPage;
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,goodsPage);
+    }
+
+    /**
+     * 获取选中的商家展示对应的商品 进行分页
+     * @param jsonObject  pageNum、pageSize、shopId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping("/getGoodsByShopId.do")
+    @ResponseBody
+    public AjaxResult getGoodsByShopId(@RequestBody JSONObject jsonObject,
+                                            @RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
+                                            @RequestParam(name = "pageSize",defaultValue = "8") int pageSize){
+
+        if(jsonObject != null && jsonObject.size() == 2){
+            pageNum = jsonObject.getInteger("pageNum");
+            pageSize = jsonObject.getInteger("pageSize");
+        }
+        String shopId = jsonObject.getString("shopId");
+
+        PageInfo<Goods> goodsPage = goodsService.getGoodsByUserId(pageNum,pageSize,shopId);
+
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,goodsPage);
+    }
+
+    /**
+     * 获取所有商品分类
+     * @return
+     */
+    @RequestMapping("/getGoodsAllType.do")
+    @ResponseBody
+    public AjaxResult getGoodsAllType(){
+
+        List<String> orderTypes = goodsService.getGoodsAllType();
+
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,orderTypes);
     }
 
 }

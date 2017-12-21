@@ -1,0 +1,353 @@
+﻿<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>商品列表</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+    
+    <!-- All CSS Files -->
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Element UI -->
+    <link rel="stylesheet" href="css/element.css">
+    <!-- Icon Font -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/pe-icon-7-stroke.css">
+    <!-- Plugins css file -->
+    <link rel="stylesheet" href="css/plugins.css">
+    <!-- Theme main style -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Responsive css -->
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Modernizr JS -->
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+
+<body>
+     
+
+
+
+<!-- Body main wrapper start -->
+<div class="wrapper">
+
+<!-- START HEADER SECTION -->
+<header class="header-section section sticker" id="shopCart">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- logo -->
+                <div class="header-logo float-left">
+                    <a href="index.html"><img src="img/logo.png" alt="main logo"></a>
+                </div>
+                <!-- header-search & total-cart -->
+                <div class="float-right">
+                    <div class="header-option-btns float-right">
+                        <!-- header Account -->
+                        <div class="header-account float-left">
+                            <ul>
+                                <li><a href="#" data-toggle="dropdown"><i class="pe-7s-config"></i></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">我的账号</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Header Cart -->
+                        <div class="header-cart float-left">
+                            <!-- Cart Toggle -->
+                            <a class="cart-toggle" href="#" data-toggle="dropdown">
+                                <i class="pe-7s-cart"></i>
+                                <span>{{cartList.length}}</span>
+                            </a>
+                            <!-- Mini Cart Brief -->
+                            <div class="mini-cart-brief dropdown-menu text-left">
+                                <!-- Cart Products -->
+                                <div class="all-cart-product clearfix" v-for="ci in cartList">
+                                    <div class="single-cart clearfix">
+                                        <div class="cart-image">
+                                            <a href="product-details.html"><img :src="'/onlineShopping/shop/loadImage.do?type=goods&shopLogoPath=' + ci.goodsLogoPath" alt=""></a>
+                                        </div>
+                                        <div class="cart-info">
+                                            <h5><a href="product-details.html">{{ci.goodsName}}</a></h5>
+                                            <p>{{ci.goodsNum}} x ￥{{ci.goodsPrice}}</p>
+                                            <a @click="delCart(ci.orderId)" class="cart-delete" title="Remove this item"><i class="pe-7s-trash"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Cart Total -->
+                                <div class="cart-totals">
+                                    <h5>Total <span>£12.00</span></h5>
+                                </div>
+                                <!-- Cart Button -->
+                                <div class="cart-bottom  clearfix">
+                                    <a href="checkout.html">Check out</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <nav class="main-menu menu-right float-right">
+                        <ul>
+                            <li><a href="index.html">首页</a></li>
+                            <li><a href="login.html">登录</a></li>
+                            <li><a href="register.html">注册</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="mobile-menu"></div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- END HEADER SECTION -->
+
+<!-- START SLIDER SECTION -->
+<div class="home-slider-section section">
+    <!-- Home Slider -->
+    <div id="home-slider" class="slides">   
+        <img src="img/slider/3.jpg" alt="" title="#slider-caption-1"  />
+        <img src="img/slider/1.jpg" alt="" title="#slider-caption-2"  />
+    </div>
+    <!-- Caption 1 -->
+    <div id="slider-caption-1" class="nivo-html-caption">
+        <div class="container">
+            <div class="row">
+                <div class="hero-slider-content col-sm-8 col-xs-12">
+                    <h1 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">ACCESSORIES</h1>
+                    <p class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="1s">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, </p>
+                    <a href="product-details.html" class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="1.5s">shop now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Caption 2 -->
+    <div id="slider-caption-2" class="nivo-html-caption">
+        <div class="container">
+            <div class="row">
+                <div class="hero-slider-content col-sm-8 col-xs-12">
+                    <h1 class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">椅子</h1>
+                    <p class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="1s">好的</p>
+                    <a href="product-details.html" class="wow fadeInUp" data-wow-duration="1s" data-wow-delay="1.5s">现在购买</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END SLIDER SECTION -->
+    
+<!-- PRODUCT SECTION START -->
+<div class="product-section section pt-120 pb-120" id="app">
+    <div class="container">
+        <div class="row">
+            <!-- Isotop Product Filter -->
+            <div class="isotope-product-filter col-xs-8">
+                <button class="active" @click="setType('')">所有商品</button>
+                <button class="active" v-for="item in product_type" @click="setType(item)">{{item}}</button>
+            </div>
+            <div class="isotope-product-filter col-xs-4">
+              <form @submit.prevent="searchGoods">
+                <input type="text" placeholder="搜索商品" v-model="search.text" style="padding:0 .5em;position:relative;bottom:.6em;margin-left:1em;">
+                <button class="active" type="submit">搜索</button>
+              </form>
+            </div>
+        </div>
+        <div class="isotope-grid row">
+            <!-- Product Item Start -->
+            <div class="isotope-item col-lg-3 col-md-4 col-sm-6 col-xs-12 mb-50" v-for="p in products">
+                <div class="product-item text-center">
+                    <!-- Product Image -->
+                    <div class="product-img">
+                        <!-- Image -->
+                        <a class="image"><img :src="'/onlineShopping/shop/loadImage.do?type=goods&shopLogoPath=' + p.goodsLogoPath" alt=""/></a>
+                        <!-- Action Button -->
+                        <div class="action-btn fix">
+                            <a title="Add to Cart" style="cursor:pointer" @click="addCart(p.goodsId)"><i class="pe-7s-cart"></i>add to cart</a>
+                        </div>
+                    </div>
+                    <!-- Portfolio Info -->
+                    <div class="product-info text-left">
+                        <!-- Title -->
+                        <h5 class="title"><a href="product-details.html">{{ p.goodsName }}</a></h5>
+                        <!-- Price Ratting -->
+                        <div class="price-ratting fix">
+                            <span class="price float-left"><span class="new">¥{{ p.goodsPrice }}</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product Item End -->
+        </div>
+         
+        <div class="row">
+            <div class="text-center col-xs-12 mt-30">
+                <el-pagination @current-change="turnPage" layout="prev, pager, next" :page-count="pagination.total"></el-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PRODUCT SECTION END -->
+    
+<!-- FOOTER TOP SECTION START -->
+<div class="footer-top-section footer-top-dark section pt-100 pb-60">
+	<div class="container">
+		<div class="row">
+           
+            <!-- Footer Widget -->
+			<div class="footer-widget footer-widget-dark col-md-4 col-sm-6 col-xs-12 mb-40">
+				<h5 class="widget-title">关于商店</h5>
+				<p>介绍介绍介绍介绍</p>
+                <div class="footer-social fix">
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                    <a href="#"><i class="fa fa-pinterest"></i></a>
+                </div>
+			</div>
+			
+			<!-- Footer Widget -->
+			<div class="footer-widget footer-widget-dark col-md-2 col-sm-6 col-xs-12 mb-40">
+				<h5 class="widget-title">PROFILE</h5>
+				<ul>
+					<li><a href="#">my Account</a></li>
+					<li><a href="#">Checkout</a></li>
+					<li><a href="#">help</a></li>
+					<li><a href="#">support</a></li>
+					<li><a href="#">wishlist</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- FOOTER TOP SECTION END -->  
+
+<!-- FOOTER BOTTOM SECTION START -->
+<div class="footer-bottom-section footer-bottom-dark section">
+	<div class="container">
+		<div class="row">
+            <!-- Copyright -->
+			<div class="copyright text-left col-sm-6 col-xs-12">
+				<p>Powered by <a href="https://hastech.company/">HasTech</a></p>
+			</div>
+			<!-- Payment Method -->
+			<div class="footer-menu text-right col-sm-6 col-xs-12">
+				<a href="#">Help & Support</a>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- FOOTER BOTTOM SECTION END -->  
+   
+
+</div>
+<!-- Body main wrapper end -->
+
+
+<!-- Placed JS at the end of the document so the pages load faster -->
+
+<!-- jQuery latest version -->
+<script src="js/vendor/jquery-3.1.1.min.js"></script>
+<!-- Bootstrap js -->
+<script src="js/bootstrap.min.js"></script>
+<!-- Plugins js -->
+<script src="js/plugins.js"></script>
+<!-- Ajax Mail js -->
+<script src="js/ajax-mail.js"></script>
+
+<!-- Vue -->
+<script src="js/vendor/vue.min.js"></script>
+<!-- Element -->
+<script src="js/vendor/element.min.js"></script>
+<!-- api -->
+<script src="js/apis.js"></script>
+<!-- ajax -->
+<script src="js/ajax-plugin.js"></script>
+
+<!-- shopcart -->
+<script src="js/shop-cart.js"></script>
+
+<!-- Main js -->
+<script src="js/main.js"></script>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        created: function () {
+            this.request()
+            this.reqType()
+        },
+        data: {
+            search: {
+              text: ""
+            },
+            pagination: {
+                current: 1,
+                type: "",
+                total: 10
+            },
+            products: [],
+            product_type: []
+        },
+        methods: {
+            turnPage: function (page) {
+              this.pagination.current = page
+              this.request()
+            },
+            reqType: function () {
+              var self = this
+              this.$req('getGoodsAllType')
+                .then(function(data){
+                  self.product_type = data
+                })
+                .catch(function(){})
+            },
+            searchGoods: function () {
+              var self = this
+              self.pagination.current = 1
+              self.pagination.type = ""
+              self.request()
+            },
+            request: function(){
+                var self = this
+                this.$req('goodsHomePage', {
+                    "pageNum": self.pagination.current,
+                    "goodsType": self.pagination.type,
+                    "goodsName": self.search.text
+                }).then(function(data){
+                    self.products = data.list
+                    self.pagination.total = data.pages
+                }).catch(function(){
+
+                })
+            },
+            reset: function () {
+              this.pagination = {
+                current: 1,
+                type: "",
+                total: 10
+              }
+              this.search = {
+                text: ""
+              }
+            },
+            setType: function(type){
+              this.reset()
+              this.pagination.type = type
+              this.request()
+            },
+            addCart: function(id){
+              shopCartVM.addToCart(id)
+            }
+        }
+    })
+</script>
+
+</body>
+
+</html>

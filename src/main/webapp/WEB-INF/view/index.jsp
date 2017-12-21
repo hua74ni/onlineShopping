@@ -16,7 +16,7 @@
     //登录
     function login() {
         var myurl = "${pageContext.request.contextPath}/login.do";
-        var myjson = {"userCode":"test222","userPassword":"123"};
+        var myjson = {"userCode":"buyer01","userPassword":"123"};
         $.ajax({
             type: "POST",
             url: myurl,

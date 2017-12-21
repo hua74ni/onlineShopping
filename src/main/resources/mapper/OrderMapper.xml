@@ -5,6 +5,8 @@
     <resultMap type="com.biz.platform.web.pojo.Order" id="orderResultMap">
         <result column="order_id" property="orderId"/>
         <result column="goods_id" property="goodsId"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="goods_logo_path" property="goodsLogoPath"/>
         <result column="goods_num" property="goodsNum"/>
         <result column="goods_price" property="goodsPrice"/>
         <result column="order_total_price" property="orderTotalPrice"/>
@@ -26,7 +28,7 @@
     </resultMap>
 
     <sql id="sys_order_result">
-        order_id,goods_id,goods_num,goods_price,order_total_price,order_buyer_id,order_buyer_name,order_buyer_statu,
+        order_id,goods_id,goods_name,goods_logo_path,goods_num,goods_price,order_total_price,order_buyer_id,order_buyer_name,order_buyer_statu,
         buyer_cancel_msg,order_shop_id,order_shop_name,order_shop_statu,shop_cancel_msg,order_statu,order_is_pay,
         delivery_start_addr,delivery_end_addr,logistics,create_time,last_modify_time
     </sql>

@@ -56,7 +56,7 @@ public class Goods {
 
     //修改时间
     @Column(name = "last_modify_time")
-    private long lastModofyTime;
+    private long lastModifyTime;
 
     public String getGoodsId() {
         return goodsId;
@@ -138,12 +138,12 @@ public class Goods {
         this.createTime = createTime;
     }
 
-    public long getLastModofyTime() {
-        return lastModofyTime;
+    public long getLastModifyTime() {
+        return lastModifyTime;
     }
 
-    public void setLastModofyTime(long lastModofyTime) {
-        this.lastModofyTime = lastModofyTime;
+    public void setLastModifyTime(long lastModifyTime) {
+        this.lastModifyTime = lastModifyTime;
     }
 
     @Override
@@ -159,7 +159,7 @@ public class Goods {
                 ", goodsDetails='" + goodsDetails + '\'' +
                 ", goodsRemarks='" + goodsRemarks + '\'' +
                 ", createTime=" + createTime +
-                ", lastModofyTime=" + lastModofyTime +
+                ", lastModofyTime=" + lastModifyTime +
                 '}';
     }
 }

@@ -6,6 +6,8 @@ import com.biz.platform.web.service.BaseService;
 import com.biz.platform.web.service.ShopService;
 import com.biz.platform.web.utils.PropertiesUtil;
 import com.biz.platform.web.utils.StringUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by huangdonghua on 2017/12/14.
@@ -119,6 +122,15 @@ public class ShopServiceImpl extends BaseService<Shop> implements ShopService {
     @Override
     public int checkShopName(String shopName) {
         return shopMapper.checkShopName(shopName);
+    }
+
+    @Override
+    public PageInfo<Shop> queryShopPage(int pageNum, int pageSize) {
+
+        PageHelper.startPage(pageNum,pageSize);
+        List<Shop> shops = shopMapper.selectAll();
+
+        return new PageInfo<Shop>(shops);
     }
 
     //删除旧的图片

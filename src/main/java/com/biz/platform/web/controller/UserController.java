@@ -34,8 +34,8 @@ public class UserController {
     //通过userId获取用户信息
     @RequestMapping("/loadUser.do")
     @ResponseBody
-    public User load(@RequestBody User user){
-        return userService.getUserByUserId(user);
+    public AjaxResult load(@RequestBody User user){
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,userService.getUserByUserId(user));
     }
 
     //添加用户
@@ -67,9 +67,9 @@ public class UserController {
     //校验userCode是否已经存在
     @RequestMapping("/checkUserCode.do")
     @ResponseBody
-    public int checkUserCode(@RequestBody JSONObject jsonObject){
+    public AjaxResult checkUserCode(@RequestBody JSONObject jsonObject){
         String userCode = jsonObject.getString("userCode");
-        return userService.checkUserCode(userCode);
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,userService.checkUserCode(userCode));
     }
 
 }

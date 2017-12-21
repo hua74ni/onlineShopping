@@ -13,7 +13,7 @@
         <result column="goods_detais" property="goodsDetails"/>
         <result column="goods_remarks" property="goodsRemarks"/>
         <result column="create_time" property="createTime"/>
-        <result column="last_modify_time" property="lastModifyTime"/>
+        <result column="last_modify_time" property="lastModifyTime" javaType="java.lang.Long"/>
     </resultMap>
 
     <sql id="sys_goods_result">
@@ -38,10 +38,24 @@
         select
         <include refid="sys_goods_result"></include>
         from biz_platform_goods
-        where goods_type = ${goodsVo.goodsType} and
-        goods_name LIKE '%${goodsVo.goodsName}%' ORDER BY create_time DESC;
+        <where>
+            <if test="goodsVo.goodsType != null and goodsVo.goodsType != ''">
+                and goods_type = '${goodsVo.goodsType}'
+            </if>
+            <if test="goodsVo.goodsName != null and goodsVo.goodsName != ''">
+                and goods_name LIKE '%${goodsVo.goodsName}%'
+            </if>
+        </where>
+
+        ORDER BY create_time DESC
 
 
+    </select>
+
+    <select id="getGoodsAllType" resultType="java.lang.String">
+        select goods_type
+        from biz_platform_goods
+        GROUP BY goods_type
     </select>
 
 

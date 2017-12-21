@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.File;
 import java.io.IOException;
@@ -130,17 +131,23 @@ public class GoodsServiceImpl extends BaseService<Goods> implements GoodsService
 
     @Override
     public PageInfo<Goods> queryGoodsHomePage(GoodsVo goodsVo) {
-        int pageNum = 0;
-        int pageSize = 10;
-        if(goodsVo != null && goodsVo.getPageSize() != 0){
+        int pageNum = 1;
+        int pageSize = 8;
+        if(goodsVo != null && goodsVo.getPageNum() != 0){
             pageNum = goodsVo.getPageNum();
-            pageSize = goodsVo.getPageSize();
+//            pageSize = goodsVo.getPageSize();
         }
         PageHelper.startPage(pageNum,pageSize);
         List<Goods> goods = goodsMapper.queryGoodsHomePage(goodsVo);
 
 
-        return null;
+        return new PageInfo<Goods>(goods);
+    }
+
+    //获取所有商品的分类
+    @Override
+    public List<String> getGoodsAllType() {
+        return goodsMapper.getGoodsAllType();
     }
 
     //删除旧的图片

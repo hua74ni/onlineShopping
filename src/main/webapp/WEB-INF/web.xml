@@ -44,6 +44,7 @@
   </filter-mapping>
 
   <welcome-file-list>
-    <welcome-file>/login.jsp</welcome-file>
+    <welcome-file>/index.do</welcome-file>
+    <welcome-file>/opView/product-list.html</welcome-file>
   </welcome-file-list>
 </web-app>

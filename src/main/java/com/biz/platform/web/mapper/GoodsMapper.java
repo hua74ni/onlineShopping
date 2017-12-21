@@ -25,4 +25,10 @@ public interface GoodsMapper extends Mapper<Goods>{
      * @return
      */
     public List<Goods> queryGoodsHomePage(@Param("goodsVo") GoodsVo goodsVo);
+
+    /**
+     * 获取所有商品的分类
+     * @return
+     */
+    public List<String> getGoodsAllType();
 }

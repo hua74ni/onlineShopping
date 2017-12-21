@@ -1,0 +1,367 @@
+﻿<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Outside - Minimalist Ecommerce HTML Template</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+    
+    <!-- All CSS Files -->
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Element UI -->
+    <link rel="stylesheet" href="css/element.css">
+    <!-- Icon Font -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/pe-icon-7-stroke.css">
+    <!-- Plugins css file -->
+    <link rel="stylesheet" href="css/plugins.css">
+    <!-- Theme main style -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Responsive css -->
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Modernizr JS -->
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    
+</head>
+
+<body>
+
+     
+
+
+
+<!-- Body main wrapper start -->
+<div class="wrapper">
+
+<!-- START HEADER SECTION -->
+<header class="header-section section sticker">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- logo -->
+                    <div class="header-logo float-left">
+                        <a href="index.html"><img src="img/logo.png" alt="main logo"></a>
+                    </div>
+                    <!-- header-search & total-cart -->
+                    <div class="float-right">
+                        <div class="header-option-btns float-right">
+                            <!-- header-search -->
+                            <div class="header-search float-left">
+                                <button class="search-toggle" data-toggle="dropdown"><i class="pe-7s-search"></i></button>
+                                <div class="dropdown-menu header-search-form">
+                                    <form action="#">
+                                        <input type="text" placeholder="Search">
+                                        <button><i class="fa fa-long-arrow-right"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- header Account -->
+                            <div class="header-account float-left">
+                                <ul>
+                                    <li><a href="#" data-toggle="dropdown"><i class="pe-7s-config"></i></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">我的账号</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- Header Cart -->
+                            <div class="header-cart float-left">
+                                <!-- Cart Toggle -->
+                                <a class="cart-toggle" href="#" data-toggle="dropdown">
+                                    <i class="pe-7s-cart"></i>
+                                    <span>2</span>
+                                </a>
+                                <!-- Mini Cart Brief -->
+                                <div class="mini-cart-brief dropdown-menu text-left">
+                                    <!-- Cart Products -->
+                                    <div class="all-cart-product clearfix">
+                                        <div class="single-cart clearfix">
+                                            <div class="cart-image">
+                                                <a href="product-details.html"><img src="img/product/cart-1.jpg" alt=""></a>
+                                            </div>
+                                            <div class="cart-info">
+                                                <h5><a href="product-details.html">Le Parc Minotti Chair</a></h5>
+                                                <p>1 x £9.00</p>
+                                                <a href="#" class="cart-delete" title="Remove this item"><i class="pe-7s-trash"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="single-cart clearfix">
+                                            <div class="cart-image">
+                                                <a href="product-details.html"><img src="img/product/cart-2.jpg" alt=""></a>
+                                            </div>
+                                            <div class="cart-info">
+                                                <h5><a href="product-details.html">DSR Eiffel chair</a></h5>
+                                                <p>1 x £9.00</p>
+                                                <a href="#" class="cart-delete" title="Remove this item"><i class="pe-7s-trash"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Cart Total -->
+                                    <div class="cart-totals">
+                                        <h5>Total <span>£12.00</span></h5>
+                                    </div>
+                                    <!-- Cart Button -->
+                                    <div class="cart-bottom  clearfix">
+                                        <a href="checkout.html">Check out</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <nav class="main-menu menu-right float-right">
+                            <ul>
+                                <li><a href="index.html">首页</a></li>
+                                <li><a href="login.html">登录</a></li>
+                                <li><a href="register.html">注册</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="mobile-menu"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- END HEADER SECTION -->
+
+<!-- PAGE BANNER SECTION -->
+<div class="page-banner-section section">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="page-banner-content">
+                    <h1>订单确认</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="#">首页</a></li>
+                        <li class="active">订单确认</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<!-- PAGE SECTION START -->
+<div class="page-section section pt-120 pb-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="customer-login mb-40">
+                    <!-- LOGIN START -->
+                    <div id="checkout-login" class="checkout-login collapse fix">
+                        <div class="checkout-login-wrapper mt-30">
+                            <p>Quisque gravida turpis sit amet nulla posuere lacinia. Cras sed est sit amet ipsum luctus.</p>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <form action="#">
+                                    <div class="fix mb-20">
+                                        <label>Username or email <span class="required">*</span></label>
+                                        <input type="text" />
+                                    </div>
+                                    <div class="fix mb-20">
+                                        <label>Password  <span class="required">*</span></label>
+                                        <input type="text" />
+                                    </div>
+                                    <div class="fix mb-20">
+                                        <input type="submit" value="Login" />
+                                        <label class="remember-me-box">
+                                            <input type="checkbox" />
+                                            Remember me 
+                                        </label>
+                                    </div>
+                                    <a href="#">Lost your password?</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- LOGIN END -->						
+                </div>
+            </div>	
+            <div class="checkout-form">						
+                    <div class="col-lg-6 col-md-6 mb-40">
+                        <form action="#">
+                            <h3>收件信息</h3>
+                            <div class="row">
+                                <div class="col-xs-12 mb-30">
+                                    <label for="b_c_name">收件人<span class="required">*</span></label>									
+                                    <input id="b_c_name" placeholder="收件人" type="text"/>
+                                </div>
+                                <div class="col-xs-12 mb-30">
+                                    <label>地址<span class="required">*</span></label>
+                                    <input type="text" placeholder="地址" />
+                                </div>
+                                <div class="col-xs-12 mb-30">
+                                    <label>手机<span class="required">*</span></label>
+                                    <input type="text"  placeholder="手机号" />
+                                </div>							
+                            </div>
+                            <div class="order-notes">
+                                <label for="order_note">备注</label>
+                                <textarea id="order_note" placeholder="备注" ></textarea>								
+                            </div>
+                        </form>											
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-12 mb-40">
+                        <div class="order-wrapper">
+                            <h3>订单信息</h3>
+                            <div class="order-table table-responsive mb-30">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="product-name">商品</th>
+                                            <th class="product-total">价格</th>
+                                        </tr>							
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="product-name">
+                                                Vestibulum suscipit <strong class="product-qty"> × 1</strong>
+                                            </td>
+                                            <td class="product-total">
+                                                <span class="amount">$165.00</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="product-name">
+                                                Vestibulum dictum magna	<strong class="product-qty"> × 1</strong>
+                                            </td>
+                                            <td class="product-total">
+                                                <span class="amount">$50.00</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>订单总价</th>
+                                            <td><strong>$215.00</strong>
+                                            </td>
+                                        </tr>								
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="payment-method">
+                                <div class="panel-group" id="accordion">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" id="headingOne">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                                银行转账
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseOne" class="panel-collapse collapse in">
+                                            <div class="panel-body">
+                                                <p>直接通过银行转账</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" id="headingThree">
+                                            <h4 class="panel-title">
+                                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                                支付宝
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseThree" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <p>通过支付宝</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-button">
+                                    <input type="button" value="提交订单" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PAGE SECTION END -->
+
+<!-- FOOTER TOP SECTION START -->
+<div class="footer-top-section section pt-100 pb-60">
+        <div class="container">
+            <div class="row">
+                
+                <!-- Footer Widget -->
+                <div class="footer-widget col-md-4 col-sm-6 col-xs-12 mb-40">
+                    <h5 class="widget-title">关于本店</h5>
+                    <p>本店介绍本店介绍本店介绍本店介绍本店介绍</p>
+                </div>
+                
+                <!-- Footer Widget -->
+                <div class="footer-widget col-md-2 col-sm-6 col-xs-12 mb-40">
+                    <h5 class="widget-title">PROFILE</h5>
+                    <ul>
+                        <li><a href="#">my Account</a></li>
+                        <li><a href="#">Checkout</a></li>
+                        <li><a href="#">help</a></li>
+                        <li><a href="#">support</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- FOOTER TOP SECTION END -->  
+
+<!-- FOOTER BOTTOM SECTION START -->
+<div class="footer-bottom-section section">
+	<div class="container">
+		<div class="row">
+            <!-- Copyright -->
+			<div class="copyright text-left col-sm-6 col-xs-12">
+				<p>Powered by <a href="https://hastech.company/">HasTech</a></p>
+			</div>
+			<!-- Payment Method -->
+			<div class="footer-menu text-right col-sm-6 col-xs-12">
+				<a href="#">Help & Support</a>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- FOOTER BOTTOM SECTION END -->  
+   
+
+</div>
+<!-- Body main wrapper end -->
+
+
+<!-- Placed JS at the end of the document so the pages load faster -->
+
+<!-- jQuery latest version -->
+<script src="js/vendor/jquery-3.1.1.min.js"></script>
+<!-- Bootstrap js -->
+<script src="js/bootstrap.min.js"></script>
+<!-- Plugins js -->
+<script src="js/plugins.js"></script>
+<!-- Ajax Mail js -->
+<script src="js/ajax-mail.js"></script>
+
+<!-- Vue -->
+<script src="js/vendor/vue.min.js"></script>
+<!-- Element -->
+<script src="js/vendor/element.min.js"></script>
+<!-- api -->
+<script src="js/apis.js"></script>
+<!-- ajax -->
+<script src="js/ajax-plugin.js"></script>
+
+<!-- Main js -->
+<script src="js/main.js"></script>
+
+<script>
+    
+</script>
+
+</body>
+
+</html>

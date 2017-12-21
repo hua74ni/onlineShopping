@@ -75,13 +75,13 @@ public class FeedBackController {
     //判断 当前用户是否已经评论该商品 评论过或者没有资格评论 返回值为"" 有订单但未评论 返回值为orderId
     @RequestMapping("/checkUserIsFeedBack.do")
     @ResponseBody
-    public String checkUserIsFeedBack(@RequestBody Goods goods, HttpServletRequest request){
+    public AjaxResult checkUserIsFeedBack(@RequestBody Goods goods, HttpServletRequest request){
 
         User user = (User) request.getSession().getAttribute("loginUser");
 
         String result = feedBackService.checkUserIsFeedBack(goods.getGoodsId(),user.getUserId());
 
-        return result;
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,request);
     }
 
     /**

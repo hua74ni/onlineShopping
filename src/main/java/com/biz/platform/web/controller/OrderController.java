@@ -1,10 +1,10 @@
 package com.biz.platform.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.biz.platform.web.pojo.ConfirmOrder;
-import com.biz.platform.web.pojo.Order;
-import com.biz.platform.web.pojo.User;
+import com.biz.platform.web.pojo.*;
+import com.biz.platform.web.service.GoodsService;
 import com.biz.platform.web.service.OrderService;
+import com.biz.platform.web.service.ShopService;
 import com.biz.platform.web.utils.AjaxResult;
 import com.biz.platform.web.utils.CollectionUtils;
 import com.biz.platform.web.utils.StringUtils;
@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by huangdonghua on 2017/12/14.
@@ -32,6 +33,12 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private GoodsService goodsService;
+
+    @Autowired
+    private ShopService shopService;
 
     //通过 orderId获取order信息
     @RequestMapping("/loadOrder.do")
@@ -92,26 +99,54 @@ public class OrderController {
      */
     @RequestMapping("/addTempOrder.do")
     @ResponseBody
-    public List<Order> AddTempOrder(@RequestBody Order order,HttpServletRequest request){
+    public AjaxResult AddTempOrder(@RequestBody Order order,HttpServletRequest request){
 
-        List<Order> list = new ArrayList<Order>();
+//        List<Order> list = new ArrayList<Order>();
 
-        User user = (User) request.getSession().getAttribute("loginUser");
+        LinkedBlockingDeque deque = new LinkedBlockingDeque();
 
-        order.setOrderId(UUID.randomUUID().toString());
-        order.setOrderBuyerId(user.getUserId());
-        order.setOrderBuyerName(user.getUserName());
-        list.add(order);
+        Goods goods = new Goods();
+        goods.setGoodsId(order.getGoodsId());
 
         //从session 中获取临时订单
-        List<Order> tempList = (List<Order>) request.getSession().getAttribute("tempOrder");
-        if(!CollectionUtils.isEmpty(tempList)){
-            list.addAll(tempList);
+//        List<Order> tempList = (List<Order>) request.getSession().getAttribute("tempOrder");
+        LinkedBlockingDeque<Order> tempDeque = (LinkedBlockingDeque<Order>) request.getSession().getAttribute("tempOrder");
+
+        if(!CollectionUtils.isEmpty(tempDeque)){
+            for (Order _order:
+                    tempDeque) {
+                if(_order.getGoodsId().equals(order.getGoodsId())){
+                    int tmp = _order.getGoodsNum();
+                    tempDeque.remove(_order);
+                    _order.setGoodsNum(tmp + 1);
+                    tempDeque.add(_order);
+                }
+            }
         }
 
-        request.getSession().setAttribute("tempOrder",list);
+        goods = goodsService.getGoodsByGoodsId(goods);
 
-        return list;
+        Shop shop = new Shop();
+        shop.setShopId(goods.getGoodsShopId());
+        shop = shopService.getShopByShopId(shop);
+
+        order.setOrderId(UUID.randomUUID().toString());
+        order.setOrderShopId(goods.getGoodsShopId());
+        order.setOrderShopName(shop.getShopName());
+        order.setGoodsId(goods.getGoodsId());
+        order.setGoodsName(goods.getGoodsName());
+        order.setGoodsLogoPath(goods.getGoodsLogoPath());
+        order.setGoodsNum(1);
+        order.setGoodsPrice(goods.getGoodsPrice());
+
+        if(CollectionUtils.isEmpty(tempDeque)){
+            tempDeque = new LinkedBlockingDeque<Order>();
+        }
+        tempDeque.add(order);
+
+        request.getSession().setAttribute("tempOrder",tempDeque);
+
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,new ArrayList<Order>(tempDeque));
     }
 
     /**
@@ -122,43 +157,47 @@ public class OrderController {
      */
     @RequestMapping("/deleteTempOrder.do")
     @ResponseBody
-    public List<Order> deleteTempOrder(HttpServletRequest request,@RequestBody Order order){
+    public AjaxResult deleteTempOrder(HttpServletRequest request,@RequestBody Order order){
 
         //从session 中获取临时订单
-        List<Order> tempList = (List<Order>) request.getSession().getAttribute("tempOrder");
+//        List<Order> tempList = (List<Order>) request.getSession().getAttribute("tempOrder");
+        LinkedBlockingDeque<Order> tempDeque = (LinkedBlockingDeque<Order>) request.getSession().getAttribute("tempOrder");
 
-        if(CollectionUtils.isEmpty(tempList) || order == null || StringUtils.isNotNull(order.getOrderId())) {
+
+        if(CollectionUtils.isEmpty(tempDeque) || order == null || StringUtils.isNullOrBlank(order.getOrderId())) {
             return null;
         }
 
         for (Order _order:
-        tempList) {
+                tempDeque) {
             if(_order != null && StringUtils.isNotNullAndBlank(_order.getOrderId())){
                 if(_order.getOrderId().equals(order.getOrderId())){
-                    tempList.remove(_order);
+                    tempDeque.remove(_order);
                 }
             }
         }
 
-        request.getSession().setAttribute("tempOrder",tempList);
+        request.getSession().setAttribute("tempOrder",tempDeque);
 
-        return tempList;
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,new ArrayList<Order>(tempDeque));
     }
 
     //展示临时订单
     @RequestMapping("/getTempOrder.do")
     @ResponseBody
-    public List<Order> getTempOrder(HttpServletRequest request){
+    public AjaxResult getTempOrder(HttpServletRequest request){
 
         List<Order> list = new ArrayList<Order>();
         //从session 中获取临时订单
-        List<Order> tempList = (List<Order>) request.getSession().getAttribute("tempOrder");
+//        List<Order> tempList = (List<Order>) request.getSession().getAttribute("tempOrder");
+        LinkedBlockingDeque<Order> tempDeque = (LinkedBlockingDeque<Order>) request.getSession().getAttribute("tempOrder");
 
-        if(!CollectionUtils.isEmpty(tempList)){
-            list.addAll(tempList);
+
+        if(!CollectionUtils.isEmpty(tempDeque)){
+            list.addAll(tempDeque);
         }
 
-        return list;
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,list);
     }
 
     /**
@@ -230,7 +269,7 @@ public class OrderController {
     //通过userId获取该用户的订单信息 进行分页
     @RequestMapping("/getOrderByUserId.do")
     @ResponseBody
-    public PageInfo<Order> getOrderByUserId(@RequestBody JSONObject jsonObject
+    public AjaxResult getOrderByUserId(@RequestBody JSONObject jsonObject
                                 , @RequestParam(name = "pageNum",defaultValue = "0") int pageNum
                                 , @RequestParam(name = "pageSize",defaultValue = "10") int pageSize
                                 , HttpServletRequest request){
@@ -247,7 +286,9 @@ public class OrderController {
 
         PageInfo<Order> orderPage = orderService.getOrderByUserId(pageNum,pageSize,loginUser);
 
-        return orderPage;
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,orderPage);
     }
+
+
 
 }

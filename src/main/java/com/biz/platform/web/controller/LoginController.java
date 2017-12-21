@@ -28,9 +28,9 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/test.do")
+    @RequestMapping(value = "/index.do")
     public String test(){
-        return "index";
+        return "product-list";
     }
 
     //登录
@@ -66,11 +66,11 @@ public class LoginController {
     //获取当前已经登录的用户信息
     @RequestMapping("/getCurrentLoginUser.do")
     @ResponseBody
-    public User getCurrentLoginUser(HttpServletRequest request){
+    public AjaxResult getCurrentLoginUser(HttpServletRequest request){
 
         User user = (User) request.getSession().getAttribute("loginUser");
 
-        return user;
+        return new AjaxResult(AjaxResult.STATUS_SUCCESS,user);
     }
 
     /**

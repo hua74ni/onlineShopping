@@ -5,6 +5,8 @@ import com.biz.platform.web.vo.GoodsVo;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * Created by huangdonghua on 2017/12/14.
  */
@@ -57,4 +59,10 @@ public interface GoodsService {
      * @return
      */
     public PageInfo<Goods> queryGoodsHomePage(GoodsVo goodsVo);
+
+    /**
+     * 等到所有商品类型
+     * @return
+     */
+    public List<String> getGoodsAllType();
 }

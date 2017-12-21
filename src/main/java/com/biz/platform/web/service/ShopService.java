@@ -1,6 +1,7 @@
 package com.biz.platform.web.service;
 
 import com.biz.platform.web.pojo.Shop;
+import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -45,4 +46,12 @@ public interface ShopService {
      * @return
      */
     public int checkShopName(String shopName);
+
+    /**
+     * 获取所有的商家数据 进行分页
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    PageInfo<Shop> queryShopPage(int pageNum, int pageSize);
 }
